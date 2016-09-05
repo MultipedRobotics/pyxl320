@@ -1,11 +1,26 @@
 pyXL320
 =========
 
-.. image:: pics/xl-320.jpg
-	:align: center
+.. image:: https://landscape.io/github/walchko/pyxl320/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/walchko/pyxl320/master
+   :alt: Code Health
+.. image:: https://img.shields.io/pypi/v/pyxl320.svg
+    :target: https://pypi.python.org/pypi/pyxl320/
+    :alt: Latest Version
+.. image:: https://img.shields.io/pypi/dm/pyxl320.svg
+    :target: https://pypi.python.org/pypi/pyxl320/
+    :alt: Downloads
+.. image:: https://img.shields.io/pypi/l/pyxl320.svg
+    :target: https://pypi.python.org/pypi/pyxl320/
+    :alt: License
 
 This is still a work in progress and **only** supports XL-320 and **only**
-version 2.0 of their protocol. The library is divided up as follows:
+version 2.0 of their protocol. 
+
+.. image:: pics/xl-320.jpg
+	:align: center
+	
+The library is divided up as follows:
 
  - pyxl320
  	- **ServoSerial** - half duplex hardware serial interface
