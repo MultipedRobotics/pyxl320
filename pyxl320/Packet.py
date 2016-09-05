@@ -135,7 +135,7 @@ def makePingPacket(ID):
 	return pkt
 
 
-def makeWritePacket(ID, reg, values=[]):
+def makeWritePacket(ID, reg, values=None):
 	"""
 	Creates a packet that writes a value(s) to servo ID at location reg. Make
 	sure the values are in little endian (use Packet.le() if necessary) for 16 b
@@ -145,7 +145,7 @@ def makeWritePacket(ID, reg, values=[]):
 	return pkt
 
 
-def makeReadPacket(ID, reg, values=[]):
+def makeReadPacket(ID, reg, values=None):
 	"""
 	Creates a packet that reads the register(s) of servo ID at location reg. Make
 	sure the values are in little endian (use Packet.le() if necessary) for 16 b

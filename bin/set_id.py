@@ -16,7 +16,7 @@ def main():
 
 	curr_id = raw_input('Enter current id >> ')
 	new_id = raw_input('Enter new id >> ')
-	pkt = Packet.makeWritePacket(1, xl320.XL320_ID)
+	pkt = Packet.makeWritePacket(curr_id, xl320.XL320_ID, [new_id])
 	ser.write(pkt)
 	ret = ser.read()
 	print('ret: {}'.format(ret))

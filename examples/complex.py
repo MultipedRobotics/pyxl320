@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import pyxl320
-from pyxl320 import ServoSerial, Packet, utils, xl320
+from pyxl320 import ServoSerial, Packet, xl320
 from pyxl320 import DummySerial
 from time import sleep
 
