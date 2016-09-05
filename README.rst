@@ -14,8 +14,12 @@ pyXL320
     :target: https://pypi.python.org/pypi/pyxl320/
     :alt: License
 
+
+
 .. image:: pics/xl-320.jpg
 	:align: center
+
+
 
 This is still a work in progress and **only** supports XL-320 and **only**
 version 2.0 of their protocol. The library is divided up as follows:
