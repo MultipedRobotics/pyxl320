@@ -1,6 +1,19 @@
 pyXL320
 =========
 
+.. image:: https://landscape.io/github/walchko/pyxl320/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/walchko/pyxl320/master
+   :alt: Code Health
+.. image:: https://img.shields.io/pypi/v/pyxl320.svg
+    :target: https://pypi.python.org/pypi/pyxl320/
+    :alt: Latest Version
+.. image:: https://img.shields.io/pypi/dm/pyxl320.svg
+    :target: https://pypi.python.org/pypi/pyxl320/
+    :alt: Downloads
+.. image:: https://img.shields.io/pypi/l/pyxl320.svg
+    :target: https://pypi.python.org/pypi/pyxl320/
+    :alt: License
+
 .. image:: pics/xl-320.jpg
 	:align: center
 
