@@ -1,0 +1,14 @@
+language: python
+sudo: false
+python:
+  - "2.7"
+# command to install dependencies
+# https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
+addons:
+    apt:
+        packages:
+            - pyserial
+install: pip install
+#install: pip install -r requirements.txt
+# command to run tests
+script: nosetests -v test/test.py

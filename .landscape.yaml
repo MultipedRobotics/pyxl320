@@ -1,0 +1,19 @@
+doc-warnings: no
+test-warnings: no
+strictness: medium
+autodetect: yes
+pylint:
+    disable:
+        - logging-too-many-args
+        - too-many-function-args
+# requirements:
+#     - deps/core.txt
+#     - deps/test.txt
+ignore-paths:
+    - docs
+    - pics
+    - test
+# ignore-patterns:
+#     - ^soccer/Adafruit_.*\.py$
+python-targets:
+    - 2

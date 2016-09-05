@@ -1,0 +1,8 @@
+Thumbs.db
+*.pyc
+old
+.AppleDouble
+.DS_Store
+._*
+*.egg-info
+dist
