@@ -13,6 +13,8 @@ pyXL320
 .. image:: https://img.shields.io/pypi/l/pyxl320.svg
     :target: https://pypi.python.org/pypi/pyxl320/
     :alt: License
+.. image:: https://travis-ci.org/walchko/pyxl320.svg?branch=master
+    :target: https://travis-ci.org/walchko/pyxl320
 
 This is still a work in progress and **only** supports XL-320 and **only**
 version 2.0 of their protocol. 
