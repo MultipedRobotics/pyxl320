@@ -24,7 +24,7 @@ class PublishCommand(TestCommand):
 class GitTagCommand(TestCommand):
 	def run_tests(self):
 		print('Creating a tag for version {} on git ...'.format(VERSION))
-		os.system("git tag -a %s -m 'version %s'" % (VERSION, VERSION))
+		os.system("git tag -a {} -m 'version {}'".format(VERSION, VERSION))
 		os.system("git push --tags")
 
 

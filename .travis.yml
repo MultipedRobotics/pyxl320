@@ -4,11 +4,12 @@ python:
   - "2.7"
 # command to install dependencies
 # https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
-addons:
-    apt:
-        packages:
-            - pyserial
-install: pip install
-#install: pip install -r requirements.txt
+# addons:
+#     apt:
+#         packages:
+#             - pyserial
+#             - nose
+# install: pip install
+install: pip install pyserial nose
 # command to run tests
 script: nosetests -v test/test.py

@@ -9,12 +9,13 @@ from time import sleep
 ID = 1
 port = '/dev/tty.usbserial-A5004Flb'
 sleep_time = 0.01
+speed = 0.75
 
 serial = ServoSerial(port)  # use this if you want to talk to real servos
-# serial = DummySerial(port)  # tell it what port you want to use
+# serial = DummySerial(port)  # use this for simulation
 serial.open()
 
-pkt = Packet.makeServoSpeed(ID, 75)  # set speed to 75%
+pkt = Packet.makeServoSpeed(ID, speed)  # set servo speed
 
 try:
 	led_color = 0
@@ -23,7 +24,7 @@ try:
 		pkt = Packet.makeLEDPacket(ID, led_color)
 		serial.write(pkt)
 		for angle in range(0, 300):
-			pkt = Packet.makeServoPacket(ID, angle)  # move servo 1 to 158.6 degrees
+			pkt = Packet.makeServoPacket(ID, angle)  # move servo
 			serial.write(pkt)  # send packet to servo
 			ans = serial.read()  # get return status packet
 			print('step {} packet {}'.format(angle, ans))
