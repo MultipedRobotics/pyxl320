@@ -4,11 +4,12 @@
 #
 #
 # Change log:
-#	2016-08-16  init
-#	2016-09-04  refactor
+#   2016-08-16  init
+#   2016-09-04  refactor
+#   2016-09-11  refactor
 
 from __future__ import division, print_function
-from xl320 import *
+import xl320
 
 """
 A bunch of packet constructors, file name follows make* and returns a complete
@@ -86,13 +87,22 @@ def crc16(data_blk):
 	return crc_accum
 
 
+# util function?
 def le(h):
 	"""
 	Little-endian, takes a 16b number and returns an array arrange in little
 	endian or [low_byte, high_byte].
 	"""
+
 	h &= 0xffff  # make sure it is 16 bits
 	return [h & 0xff, h >> 8]
+
+
+def angleToInt(angle):
+	"""
+	Converts an angle to an integer the servo understands
+	"""
+	return int(angle/300.0*1023)
 
 
 def makePacket(ID, instr, reg=None, params=None):
@@ -129,9 +139,12 @@ def makePacket(ID, instr, reg=None, params=None):
 
 
 def makePingPacket(ID):
+	"""
+	Pings a servo
+	"""
 	#      | header          | rsv | id| length    |instr|
 	# pkt = [0xff, 0xff, 0xfd, 0x00, ID, 0x03, 0x00, 0x01, crc_l, crc_h]
-	pkt = makePacket(ID, XL320_PING)
+	pkt = makePacket(ID, xl320.XL320_PING)
 	return pkt
 
 
@@ -141,7 +154,7 @@ def makeWritePacket(ID, reg, values=None):
 	sure the values are in little endian (use Packet.le() if necessary) for 16 b
 	(word size) values.
 	"""
-	pkt = makePacket(ID, XL320_WRITE, reg, values)
+	pkt = makePacket(ID, xl320.XL320_WRITE, reg, values)
 	return pkt
 
 
@@ -151,105 +164,143 @@ def makeReadPacket(ID, reg, values=None):
 	sure the values are in little endian (use Packet.le() if necessary) for 16 b
 	(word size) values.
 	"""
-	pkt = makePacket(ID, XL320_READ, reg, values)
+	pkt = makePacket(ID, xl320.XL320_READ, reg, values)
 	return pkt
 
 
 def makeResetPacket(ID, param):
-	pkt = makePacket(ID, XL320_RESET, None, param)
+	"""
+	Resets a servo to one of 3 reset states:
+
+	XL320_RESET_ALL                  = 0xFF
+	XL320_RESET_ALL_BUT_ID           = 0x01
+	XL320_RESET_ALL_BUT_ID_BAUD_RATE = 0x02
+	"""
+	if param not in [0x01, 0x02, 0xff]:
+		raise Exception('Packet.makeResetPacket invalide parameter {}'.format(param))
+	pkt = makePacket(ID, xl320.XL320_RESET, None, [param])
 	return pkt
 
 
 def makeRebootPacket(ID):
-	pkt = makePacket(ID, XL320_REBOOT)
+	"""
+	Reboots a servo
+	"""
+	pkt = makePacket(ID, xl320.XL320_REBOOT)
+	return pkt
+
+
+def makeServoIDPacket(curr_id, new_id):
+	"""
+	Given the current ID, returns a packet to set the servo to a new ID
+	"""
+	pkt = makeWritePacket(curr_id, xl320.XL320_ID, [new_id])
 	return pkt
 
 
 # [0xFF, 0xFF, 0xFD, 0x00, ID, LEN_L, LEN_H, 0x30, ANGLE_L, ANGLE_H, CRC_L, CRC_H]
 def makeServoPacket(ID, angle):
+	"""
+	Commands the servo to an angle (in degrees)
+	"""
 	if not (0.0 <= angle <= 300.0):
 		raise Exception('moveServo(), angle out of bounds: {}'.format(angle))
 	val = int(angle/300*1023)
 	# lo, hi = le(val)
 	# print('servo cmd {} deg : {} : L {} H {}'.format(angle, val, lo, hi))
-	pkt = makeWritePacket(ID, XL320_GOAL_POSITION, le(val))
+	pkt = makeWritePacket(ID, xl320.XL320_GOAL_POSITION, le(val))
 	return pkt
 
-# FIXME: this returns 2 packets, I don't like it
-def makeServoLimits(ID, maxAngle, minAngle):
+
+def makeServoMaxLimitPacket(ID, angle):
 	"""
+	Sets the maximum servo angle (in the CCW direction)
 	"""
-	if maxAngle > 300.0 or minAngle < 0.0:
-		raise Exception('makeServoLimits: {:.2f}-{:.2f} exceeds limits 0-300 deg'.format(maxAngle, minAngle))
-	if minAngle > maxAngle:
-		raise Exception('makeServoLimits: maxAngle {:.2f} is larger than minAngle {:.2f}'.format(maxAngle, minAngle))
-
-	pkt1 = makeWritePacket(ID, XL320_CCW_ANGLE_LIMIT, le[maxAngle])
-	pkt2 = makeWritePacket(ID, XL320_CW_ANGLE_LIMIT, le[minAngle])
-
-	return pkt1, pkt2
+	angle = int(angle/300.0*1023)
+	pkt = makeWritePacket(ID, xl320.XL320_CCW_ANGLE_LIMIT, le(angle))
+	return pkt
 
 
-def makeServoSpeed(ID, maxSpeed):
+def makeServoMinLimitPacket(ID, angle):
+	"""
+	Sets the minimum servo angle (in the CW direction)
+	"""
+	angle = int(angle/300.0*1023)
+	pkt = makeWritePacket(ID, xl320.XL320_CW_ANGLE_LIMIT, le(angle))
+	return pkt
+
+
+def makeServoSpeedPacket(ID, maxSpeed):
 	"""
 	Run servo between 0.0 to 1.0, where 1.0 is 100% (full) speed.
 	"""
 	if 0.0 > maxSpeed > 1.0:
 		raise Exception('makeServoSpeed: max speed is a percentage (0.0-1.0)')
-	speed = maxSpeed*1023
-	pkt = makeWritePacket(ID, XL320_GOAL_VELOCITY, le(speed))
+	speed = int(maxSpeed*1023)
+	pkt = makeWritePacket(ID, xl320.XL320_GOAL_VELOCITY, le(speed))
 	return pkt
 
 
 def makeLEDPacket(ID, color):
+	"""
+	Turn on/off the servo LED and also sets the color.
+	"""
 	# pkt = [255, 255, 253, 0, ID, 11, 0, 3, 25, 0, 2 crc_l, crc_h]
-	pkt = makeWritePacket(ID, XL320_LED, [color])
+	pkt = makeWritePacket(ID, xl320.XL320_LED, [color])
 	return pkt
+
+
+def makeDelayPacket(ID, delay):
+	"""
+	It is the delay time per data value that takes from the transmission of
+	Instruction Packet until the return of Status Packet.
+	0 to 254 (0xFE) can be used, and the delay time per data value is 2 usec.
+	That is to say, if the data value is 10, 20 usec is delayed. The initial
+	value is 250 (0xFA) (i.e., 0.5 msec).
+	"""
+	pkt = makeWritePacket(ID, xl320.XL320_DELAY_TIME, delay)
 
 
 def makeControlModePacket(ID, mode):
-	pkt = makeWritePacket(ID, XL320_CONTROL_MODE, le(mode))
+	"""
+	Sets the xl-320 to either servo or wheel mode
+	"""
+	pkt = makeWritePacket(ID, xl320.XL320_CONTROL_MODE, le(mode))
 	return pkt
 
-# def makeDumpPacket(ID):
-# 	pkt = makeReadPacket()
 
-
-# this is more of a utility
-def goodPacket(pkt):
+def makeBaudRatePacket(ID, rate):
 	"""
-	Checks to ensure it is a good packet. It checks for:
-	proper header
-	good crc
+	Set baud rate of servo.
+
+	in: rate - 0: 9600, 1:57600, 2:115200, 3:1Mbps
+	out: write packet
 	"""
-	pcrc = pkt[-2:]  # get crc from packet
-	crc = crc16(pkt[:-2])  # calculate crc from packet
-	if pcrc == le(crc) and [0xff, 0xff, 0xfd, 0x00] == pkt[:4]:
-		return True
-	else:
-		return False
+	if rate not in [0, 1, 2, 3]:
+		raise Exception('Packet.makeBaudRatePacket: wrong rate {}'.format(rate))
+	pkt = makeWritePacket(ID, xl320.XL320_BAUD_RATE, [rate])
+	return pkt
 
-
-def isStatusPacket(pkt):
+def getPacketType(pkt):
 	"""
-	Checks to ensure it is a good status packet. It checks for:
-	proper header
-	good crc
-	instruction is XL320_STATUS (0x55)
+	Returns the packet type:
+
+	XL320_PING   = 0x01
+	XL320_READ   = 0x02
+	XL320_WRITE  = 0x03
+	XL320_RESET  = 0x06
+	XL320_REBOOT = 0x08
+	XL320_STATUS = 0x55
 	"""
-	if not goodPacket(pkt): return False
-	if pkt[7] == XL320_STATUS: return True
-	return False
+	return pkt[7]
 
+def getErrorString(pkt):
+	"""
+	not done - still in work, not sure I like this
 
-def isError(pkt):
-	if pkt[7] == XL320_STATUS and len(pkt) == 11:
-		return False
-	else:
-		return True
-
-
-def errorString(pkt):
+	if error - return error_num, string
+	if not error - returns 0, None
+	"""
 	# bit 7 - alert
 	# bit 0-6 - error number 0-64
 	# err_str = {
@@ -272,17 +323,59 @@ def errorString(pkt):
 		'?',
 		'?'
 	]
-	ret = err_str[0]
-	if pkt[7] == XL320_STATUS and len(pkt) > 11:
-		err = pkt[8] | 128  # remove alert bit
-		# ret = err_str[err]
-		ret = 'error: {}'.format(err)
-	return ret
+	ret = None
+	err = 0
+
+
+	if len(pkt) >= 11:
+		if pkt[7] == xl320.XL320_STATUS:
+			# err = pkt[8] | 128  # remove alert bit
+			err = pkt[8]
+			# ret = err_str[err]
+			ret = 'error: {}'.format(err)
+	return err, ret
 
 
 def prettyPrintPacket(pkt):
+	"""
+	not done
+	"""
 	s = 'packet ID: {} instr: {} len: {}'.format(pkt[4], pkt[7], int((pkt[6] << 8) + pkt[5]))
 	if len(s) > 10:
 		params = pkt[8:-2]
 		s += ' params: {}'.format(params)
 	return s
+
+
+def findPkt(pkt):
+	"""
+	Search through a string of binary for a valid xl320 package.
+
+	in: buffer to search through
+	out: a list of valid data packet
+	"""
+	# for i in range(len(pkt)):
+	ret = []
+	while len(pkt)-11 >= 0:
+		if pkt[0:4] != [0xFF, 0xFF, 0xFD, 0x00]:
+			pkt.pop(0)  # get rid of the first index
+			# print('pop')
+			continue
+		# pcrc = pkt[-2:]  # get crc from packet
+		# crc = crc16(pkt[:-2])  # calculate crc from packet
+		length = (pkt[6] << 8) + pkt[5]
+		# print('length', length)
+		crc_pos = 5 + length
+		# pkt_crc = [pkt[crc_pos], pkt[crc_pos+1]]
+		pkt_crc = pkt[crc_pos:crc_pos + 2]
+		# print(pkt_crc)
+		crc = le(crc16(pkt[:crc_pos]))
+		# print(crc)
+		# print('pkt {}'.format(pkt[:crc_pos]))
+		if pkt_crc == crc:
+			pkt_end = crc_pos+2
+			ret.append(pkt[:pkt_end])
+			del pkt[:pkt_end]
+		else:
+			del pkt[:11]
+	return ret

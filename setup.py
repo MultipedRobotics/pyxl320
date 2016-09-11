@@ -41,7 +41,7 @@ setup(
 	version=VERSION,
 	description='A library to control dynamixel XL-320 servos with python',
 	long_description=open('README.rst').read(),
-	url='http://github.com/walchko',
+	url='http://github.com/walchko/pyxl320',
 	classifiers=['Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
 		'License :: OSI Approved :: MIT License',

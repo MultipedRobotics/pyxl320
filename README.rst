@@ -17,11 +17,11 @@ pyXL320
     :target: https://travis-ci.org/walchko/pyxl320
 
 This is still a work in progress and **only** supports XL-320 and **only**
-version 2.0 of their protocol. 
+version 2.0 of their protocol.
 
-.. image:: https://github.com/walchko/pyxl320/blob/master/pics/xl-320.jpg
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/xl-320.jpg
 	:align: center
-	
+
 The library is divided up as follows:
 
  - pyxl320
@@ -110,10 +110,10 @@ See the references below for more details on the instructions, error codes, etc.
 Hardware
 ---------
 
-.. image:: https://github.com/walchko/pyxl320/blob/master/pics/xl320_2.png
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/xl320_2.png
 	:align: center
 
-.. image:: https://github.com/walchko/pyxl320/blob/master/pics/circuit.png
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/circuit.png
 	:align: center
 
 References:

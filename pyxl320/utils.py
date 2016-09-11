@@ -3,6 +3,7 @@
 from Packet import makePingPacket
 # import serial
 from ServoSerial import ServoSerial
+import simplejson as json
 
 
 # def hex_decode(data):
@@ -45,9 +46,42 @@ def sweep(port, maximum=253):
 		handleReturn(ret)
 	s.close()
 
+
 def prettyPrintServo(ID, ctrl_table):
 	"""
 	This will pretty print out a servo's registers
 	"""
 	for key, value in ctrl_table:
 		print("{:.<29} {}".format(key, value))
+
+
+class JsonFile(object):
+	"""
+	Simple class to read/write json files.
+	"""
+	@staticmethod
+	def read(fname):
+		"""
+		Reads a Json file
+		in: file name
+		out: length of file, dictionary
+		"""
+		try:
+			with open(fname, 'r') as f:
+				data = json.load(f)
+			return data
+
+		except IOError:
+			raise Exception('Could not open {0!s} for reading'.format((fname)))
+
+	@staticmethod
+	def write(fname, data):
+		"""
+		Writes a Json file
+		"""
+		try:
+			with open(fname, 'w') as f:
+				json.dump(data, f)
+
+		except IOError:
+			raise Exception('Could not open {0!s} for writing'.format((fname)))
