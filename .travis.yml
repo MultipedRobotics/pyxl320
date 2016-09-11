@@ -10,6 +10,6 @@ python:
 #             - pyserial
 #             - nose
 # install: pip install
-install: pip install pyserial nose
+install: pip install pyserial nose simplejson
 # command to run tests
 script: nosetests -v test/test.py

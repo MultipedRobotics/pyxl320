@@ -16,10 +16,10 @@ It assumes default setting on the servo.
 
 
 # modify these for your servo
-ID = 1
+ID = 10
 port = '/dev/tty.usbserial-A5004Flb'
 sleep_time = 0.1
-speed = 0.5
+speed = 0.5  # 50% speed
 
 # err, ret = ServoSerial.listSerialPorts()
 # print('Serial ports:')

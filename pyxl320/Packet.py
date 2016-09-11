@@ -327,8 +327,7 @@ def getErrorString(pkt):
 	err = 0
 
 
-	if len(pkt) >= 11:
-		if pkt[7] == xl320.XL320_STATUS:
+	if len(pkt) >= 11 and pkt[7] == xl320.XL320_STATUS:
 			# err = pkt[8] | 128  # remove alert bit
 			err = pkt[8]
 			# ret = err_str[err]
