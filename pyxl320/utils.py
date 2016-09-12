@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 
-from Packet import makePingPacket
+# from Packet import makePingPacket
 # import serial
-from ServoSerial import ServoSerial
+# from ServoSerial import ServoSerial
 import simplejson as json
-
-
-# def hex_decode(data):
-# 	"""
-# 	b'@ab' -> '0x40 0x61 0x62'
-# 	"""
-# 	return ((''.join('0x{:02X} '.format(ord(b)) for b in serial.iterbytes(data))), len(data))
 
 
 def hex_decode(data):
@@ -32,26 +25,14 @@ def handleReturn(ans):
 		print('No returned packet')
 
 
-def sweep(port, maximum=253):
-	"""
-	Make this into a better commandline utility
-	"""
-	s = ServoSerial(port)
-	s.open()
-	for Id in range(0, maximum):
-		pkt = makePingPacket(Id)
-		print('ID:', Id, 'pkt:', pkt)
-		s.write(pkt)
-		ret = s.read()
-		handleReturn(ret)
-	s.close()
-
-
-def prettyPrintServo(ID, ctrl_table):
+def prettyPrintServo(ctrl_table):
 	"""
 	This will pretty print out a servo's registers
 	"""
-	for key, value in ctrl_table:
+	print('---------------------------------------')
+	print("{:.<29} {}".format('id', ctrl_table['id']))
+	ctrl_table.pop('id')
+	for key, value in ctrl_table.items():
 		print("{:.<29} {}".format(key, value))
 
 

@@ -15,7 +15,6 @@ class DummySerial(object):
 		self.port = port
 		self.printAll = printAll
 
-
 	@staticmethod
 	def listSerialPorts():
 		return ServoSerial.listSerialPorts()
@@ -24,9 +23,10 @@ class DummySerial(object):
 		pass
 
 	def sendPkt(self, pkt):
-		pass
+		print('serial write >>', pkt)
+		return 0, None
 
-	def read(self):
+	def read(self, how_much=128):
 		return [0xFF, 0xFF, 0xFD, 0x00, 0x01, 0x04, 0x00, 0x55, 0x00, 0xA1, 0x0C]
 
 	def write(self, data):
@@ -56,22 +56,31 @@ class ServoSerial(object):
 	"""
 	DD_WRITE = False      # data direction set to write
 	DD_READ = True        # data direction set to read
-	SLEEP_TIME = 0.005  # sleep time between read/write
+	SLEEP_TIME = 0.005    # sleep time between read/write
 
 	def __init__(self, port, baud_rate=1000000):
+		"""
+		Constructor: sets up the serial port
+		"""
 		self.serial = PySerial.Serial()
 		self.serial.baudrate = baud_rate
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
-		self.serial.timeout = 0.001  # time out between read/write
+		self.serial.timeout = 0.001  # time out waiting for blocking read()
 
 	def __del__(self):
+		"""
+		Destructor: closes the serial port
+		"""
 		self.close()
 
 	@staticmethod
 	def listSerialPorts():
 		"""
 		http://pyserial.readthedocs.io/en/latest/shortintro.html
+
+		This calls the command line tool from pyserial to list the available
+		serial ports.
 		"""
 		cmd = 'python -m serial.tools.list_ports'
 		err, ret = commands.getstatusoutput(cmd)
@@ -98,80 +107,59 @@ class ServoSerial(object):
 
 	@staticmethod
 	def decode(buff):
+		"""
+		Transforms the raw buffer data read in into a list of bytes
+		"""
 		pp = list(map(ord, buff))
 		if 0 == len(pp) == 1:
 			pp = []
 		return pp
 
-	# @staticmethod
-	# def findPkt(pkt):
-	# 	"""
-	# 	Search through a string of binary for a valid xl320 package.
-	#
-	# 	in: buffer to search through
-	# 	out: a list of valid data packet
-	# 	"""
-	# 	ret = []
-	# 	while len(pkt)-11 >= 0:
-	# 		if pkt[0:4] != [0xFF, 0xFF, 0xFD, 0x00]:
-	# 			pkt.pop(0)  # get rid of the first index
-	# 			# print('pop')
-	# 			continue
-	# 		# pcrc = pkt[-2:]  # get crc from packet
-	# 		# crc = crc16(pkt[:-2])  # calculate crc from packet
-	# 		length = (pkt[6] << 8) + pkt[5]
-	# 		# print('length', length)
-	# 		crc_pos = 5 + length
-	# 		# pkt_crc = [pkt[crc_pos], pkt[crc_pos+1]]
-	# 		pkt_crc = pkt[crc_pos:crc_pos + 2]
-	# 		# print(pkt_crc)
-	# 		crc = le(crc16(pkt[:crc_pos]))
-	# 		# print(crc)
-	# 		# print('pkt {}'.format(pkt[:crc_pos]))
-	# 		if pkt_crc == crc:
-	# 			pkt_end = crc_pos+2
-	# 			ret.append(pkt[:pkt_end])
-	# 			del pkt[:pkt_end]
-	# 		else:
-	# 			del pkt[:11]
-	# 	return ret
-
-	def read(self):
-		# self.serial.flushInput()
+	def read(self, how_much=128):  # FIXME: 128 might be too much ... what is largest?
+		"""
+		This toggles the RTS pin and reads in data. It also converts the buffer
+		back into a list of bytes and searches through the list to find valid
+		packets of info.
+		"""
 		self.serial.setRTS(self.DD_READ)
 		PySerial.time.sleep(self.SLEEP_TIME)
-		# print('in_waiting:', self.serial.inWaiting())
-		data = self.serial.read(256)
+		data = self.serial.read(how_much)
 		data = self.decode(data)
 		# return data
 		ret = []
 		d = Packet.findPkt(data)
-		if len(d) > 0:
-			ret = d[0]
+		if len(d) > 0:  # FIXME: need a better way
+			ret = d[0]  # should i take the last one ... most recent?
 		return ret  # what do i do if i find more?
 
-	def write(self, data):
-		# print('hello write')
+	def write(self, pkt):
+		"""
+		This is a simple serial write command. It toggles the RTS pin and formats
+		all of the data into bytes before it writes.
+		"""
 		self.serial.setRTS(self.DD_WRITE)
 		# prep data array for transmition
-		data = bytearray(data)
-		data = bytes(data)
+		pkt = bytearray(pkt)
+		pkt = bytes(pkt)
 
-		# self.serial.flushOutput()
-		# self.serial.setRTS(self.DD_WRITE)
 		PySerial.time.sleep(self.SLEEP_TIME)
-		num = self.serial.write(data)
-		print('wrote {} of len(pkt) == {}'.format(num, len(data)))
-		# print('out_waiting:', self.serial.out_waiting)
-		self.serial.flushOutput()
-		# print('flush')
+		num = self.serial.write(pkt)
+		# print('wrote {} of len(pkt) == {}'.format(num, len(data)))
+		self.serial.flushOutput()  # flush anything in the buffer
 		return num
 
 	def sendPkt(self, pkt):
 		"""
 		Sends a packet and waits for a return. If no return is given, then it
 		resends the packet. If an error occurs, it also resends the packet.
+
+		in: pkt - command packet to send to servo
+		out:
+			err_num - 0 if good, >0 if error
+			err_str - None if good, otherwise a string
 		"""
+		err_num = 0
+		err_str = None
 		wait_for_return = True
 		while wait_for_return:
 			# print('going write')
@@ -180,17 +168,24 @@ class ServoSerial(object):
 			if ans:
 				wait_for_return = False
 				err_num, err_str = Packet.getErrorString(ans)
-				if err_num:
+				if err_num:  # something went wrong, exit function
 					print('Error[{}]: {}'.format(err_num, err_str))
+					wait_for_return = True
 				else:
 					print('packet {}'.format(ans))
 			else:
 				print('>> retry <<')
-
+		return err_num, err_str
 
 	def close(self):
+		"""
+		If the serial port is open, it closes it.
+		"""
 		if self.serial.isOpen():
 			self.serial.close()
 
 	def flushInput(self):
+		"""
+		Flush the input.
+		"""
 		self.serial.flushInput()

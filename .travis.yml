@@ -1,15 +1,21 @@
 language: python
+
+# using container based testing is faster, but you can't use sudo
 sudo: false
+
 python:
   - "2.7"
-# command to install dependencies
+
+# command to install dependencies that require sudo
 # https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
 # addons:
 #     apt:
 #         packages:
 #             - pyserial
 #             - nose
-# install: pip install
+
+# install other libraries using pip
 install: pip install pyserial nose simplejson
+
 # command to run tests
 script: nosetests -v test/test.py

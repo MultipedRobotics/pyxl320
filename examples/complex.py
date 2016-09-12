@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from __future__ import division, print_function
-import pyxl320
 from pyxl320 import ServoSerial, Packet, xl320
 from pyxl320 import DummySerial
 from time import sleep
@@ -16,36 +15,14 @@ It assumes default setting on the servo.
 
 
 # modify these for your servo
-ID = 10
+ID = 1
 port = '/dev/tty.usbserial-A5004Flb'
 sleep_time = 0.1
 speed = 0.5  # 50% speed
 
-# err, ret = ServoSerial.listSerialPorts()
-# print('Serial ports:')
-# map(print, ret)
-serial = ServoSerial(port)
-# serial = ServoSerial(port, 115200)  # use this if you want to talk to real servos
-# serial = DummySerial(port)  # use this for simulation
+# serial = ServoSerial(port)
+serial = DummySerial(port)  # use this for simulation
 serial.open()
-
-
-# def sendCmd(angle):
-# 	wait_for_return = True
-# 	while wait_for_return:
-# 		pkt = Packet.makeServoPacket(ID, angle)  # move servo
-# 		serial.write(pkt)  # send packet to servo
-# 		ans = serial.read()  # get return status packet
-# 		if ans:
-# 			wait_for_return = False
-# 			err_num, err_str = Packet.getErrorString(ans)
-# 			if err_num:
-# 				print('Error[{}]: {}'.format(err_num, err_str))
-# 			else:
-# 				print('step {} packet {}'.format(angle, ans))
-# 		else:
-# 			print('>> retry <<')
-# 			# wait_for_return = False
 
 
 pkt = Packet.makeServoSpeedPacket(ID, speed)  # set servo speed
@@ -64,7 +41,7 @@ try:
 
 		led_color = led_color % 7 + 1
 		pkt = Packet.makeLEDPacket(ID, led_color)
-		serial.write(pkt)
+		serial.sendPkt(pkt)
 		for angle in range(300, 0, -10):
 			pkt = Packet.makeServoPacket(ID, angle)
 			serial.sendPkt(pkt)

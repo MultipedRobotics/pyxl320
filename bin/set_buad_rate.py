@@ -17,23 +17,6 @@ import argparse
 # 	new_id = raw_input('Enter new id >> ')
 # 	return port, curr_id, new_id
 
-
-def sendCmd(serial, pkt):
-	wait_for_return = True
-	while wait_for_return:
-		serial.write(pkt)  # send packet to servo
-		ans = serial.read()  # get return status packet
-		if ans:
-			wait_for_return = False
-			err_num, err_str = Packet.getErrorString(ans)
-			# print(num, ret)
-			if err_num:
-				print('Error[{}]: {}'.format(err_num, err_str))
-			else:
-				print('step packet {}'.format(ans))
-		else:
-			print('>> retry <<')
-
 def handleArgs():
 	parser = argparse.ArgumentParser(description='set servo id')
 	parser.add_argument('-i', '--interactive', help='input via commandline', action='store_true')
