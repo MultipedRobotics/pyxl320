@@ -259,6 +259,7 @@ def makeDelayPacket(ID, delay):
 	value is 250 (0xFA) (i.e., 0.5 msec).
 	"""
 	pkt = makeWritePacket(ID, xl320.XL320_DELAY_TIME, delay)
+	return pkt
 
 
 def makeControlModePacket(ID, mode):
