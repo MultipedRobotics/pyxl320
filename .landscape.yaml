@@ -12,6 +12,7 @@ ignore-paths:
     - docs
     - pics
     - test
+    - pyxl320/__init__.py
 
 python-targets:
     - 2
