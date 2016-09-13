@@ -27,12 +27,9 @@ def makeInterActive():
 def handleArgs():
 	parser = argparse.ArgumentParser(description='set servo id')
 	parser.add_argument('-i', '--interactive', help='input via commandline', action='store_true')
-	# parser.add_argument('-c', '--camera', help='set opencv camera number, ex. -c 1', type=int, default=0)
-	# parser.add_argument('-t', '--type', help='set type of camera: cv or pi, ex. -t pi', default='cv')
-	# parser.add_argument('-s', '--set', help='set id', nargs=2, type=int, default=(320, 240))
-	parser.add_argument('-s', '--set', help='set id', type=int, default=1)
-	parser.add_argument('-c', '--current', help='current id', type=int, default=1)
-	parser.add_argument('-p', '--port', help='serial port', type=str, default='')
+	parser.add_argument('-n', '--new_id', help='set new id', type=int, default=1)
+	parser.add_argument('-c', '--current_id', help='current id', type=int, default=1)
+	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/tty.usbserial-A5004Flb')
 
 	args = vars(parser.parse_args())
 	return args
@@ -45,8 +42,8 @@ def main():
 		port, curr_id, new_id = makeInterActive()
 	else:
 		port = args['port']
-		curr_id = args['current']
-		new_id = args['set']
+		curr_id = args['current_id']
+		new_id = args['new_d']
 
 	ser = DummySerial(port)
 	ser.open()

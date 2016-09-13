@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from pyxl320 import ServoSerial
+# from pyxl320 import ServoSerial
 from pyxl320 import Packet
 from pyxl320 import DummySerial
 

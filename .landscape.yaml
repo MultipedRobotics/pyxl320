@@ -7,14 +7,11 @@ pylint:
         - logging-too-many-args
         - too-many-function-args
         - unused-import
-# requirements:
-#     - deps/core.txt
-#     - deps/test.txt
+
 ignore-paths:
     - docs
     - pics
     - test
-# ignore-patterns:
-#     - ^soccer/Adafruit_.*\.py$
+
 python-targets:
     - 2

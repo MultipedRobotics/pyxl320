@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 from __future__ import division, print_function
-from pyxl320 import ServoSerial, Packet, xl320
+# from pyxl320 import ServoSerial
+from pyxl320 import Packet, xl320
 from pyxl320 import DummySerial
 from time import sleep
 import sys

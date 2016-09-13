@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-# from Packet import makePingPacket
-# import serial
-# from ServoSerial import ServoSerial
+
 import simplejson as json
 
 
@@ -25,7 +23,7 @@ def handleReturn(ans):
 		print('No returned packet')
 
 
-def prettyPrintServo(ctrl_table):
+def prettyPrintPacket(ctrl_table):
 	"""
 	This will pretty print out a servo's registers
 	"""

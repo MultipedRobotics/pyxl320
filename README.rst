@@ -7,9 +7,6 @@ pyXL320
 .. image:: https://img.shields.io/pypi/v/pyxl320.svg
     :target: https://pypi.python.org/pypi/pyxl320/
     :alt: Latest Version
-.. image:: https://img.shields.io/pypi/dm/pyxl320.svg
-    :target: https://pypi.python.org/pypi/pyxl320/
-    :alt: Downloads
 .. image:: https://img.shields.io/pypi/l/pyxl320.svg
     :target: https://pypi.python.org/pypi/pyxl320/
     :alt: License
@@ -66,13 +63,12 @@ Usage
 	serial.open()
 
 	pkt = Packet.makeServoPacket(1, 158.6)  # move servo 1 to 158.6 degrees
-	serial.write(pkt)  # send packet to servo
-	ans = serial.read()  # get return status packet
+	err_num, err_str = serial.sendPkt(pkt)  # send packet to servo
 
-	if packet.isError(ans):
+	if err_num:
 		pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_RED)
-		serial.write(pkt)
-		raise Exception('servo error: {}'.format(packet.errorString(ans)))
+		serial.sendPkt(pkt)
+		raise Exception('servo error: {}'.format(err_str)
 
 Al though I have made some packet creators (like LED and Servo), you can make
 your own using the basic ``makeWritePacket`` and ``makeReadPacket``.
@@ -143,3 +139,26 @@ Change Log
 2016-09-05 0.5.0   published to PyPi
 2016-08-16 0.0.1   init
 ========== ======= =============================
+
+License
+----------
+
+The MIT License (MIT)
+Copyright (c) 2016 Kevin J. Walchko
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
