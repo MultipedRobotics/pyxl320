@@ -48,11 +48,10 @@ def main():
 	ser = DummySerial(port)
 	ser.open()
 
-	makeServoIDPacket(ser, curr_id, new_id)
+	pkt = makeServoIDPacket(ser, curr_id, new_id)
 
-	ser.write(pkt)
-	ret = ser.read()
-	print('ret: {}'.format(ret))
+	err, err_str = ser.sendPkt(pkt)
+	print('Error: {}'.format(err))
 
 if __name__ == '__main__':
 	main()
