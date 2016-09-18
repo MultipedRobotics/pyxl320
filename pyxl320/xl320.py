@@ -1,3 +1,9 @@
+##############################################
+# The MIT License (MIT)
+# Copyright (c) 2016 Kevin Walchko
+# see LICENSE for full details
+##############################################
+
 """
 This information is specific to Dynamixel's XL-320 servo motor.
 http://support.robotis.com/en/product/dynamixel/xl-series/xl-320.htm

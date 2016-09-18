@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-#
-# Library tha works with Dynamixel XL-320 servos.
-#
-#
-# Change log:
-#   2016-08-16  init
-#   2016-09-04  refactor
-#   2016-09-11  refactor
+###############################################
+# The MIT License (MIT)
+# Copyright (c) 2016 Kevin Walchko
+# see LICENSE for full details
+##############################################
 
 from __future__ import division, print_function
 import xl320
@@ -382,6 +379,12 @@ def findPkt(pkt):
 
 
 def packetToDict(pkt):
+	"""
+	Given a packet, this turns it into a dictionary.
+
+	in: packet, array of numbers
+	out: dictionary (key, value)
+	"""
 	instrToStr = {
 		1: 'ping',
 		2: 'read',

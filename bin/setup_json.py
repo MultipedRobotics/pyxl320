@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+##############################################
+# The MIT License (MIT)
+# Copyright (c) 2016 Kevin Walchko
+# see LICENSE for full details
+##############################################
 # ---------------------------
 # Set servo properties according to a json file
 #
@@ -39,7 +44,7 @@ print(data)
 def main():
 	filename = 'test.json'
 	port = '/dev/tty.usbserial0'
-	
+
 	data = JsonFile.read(filename)
 	print(data)
 
@@ -58,7 +63,7 @@ def main():
 				pkt = func(ID, val)  # build packet
 				# print('pkt', pkt)
 				ser.sendPkt(pkt)  # send packet
-			
+
 			else:
 				print('>> Error: {} not currently supported'.format(key))
 

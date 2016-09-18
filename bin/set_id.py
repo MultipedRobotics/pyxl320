@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+##############################################
+# The MIT License (MIT)
+# Copyright (c) 2016 Kevin Walchko
+# see LICENSE for full details
+##############################################
 # ----------------------------
 # Simple tool to change the id number of a servo
 #
@@ -43,12 +48,13 @@ def main():
 	else:
 		port = args['port']
 		curr_id = args['current_id']
-		new_id = args['new_d']
+		new_id = args['new_id']
 
-	ser = DummySerial(port)
+	ser = ServoSerial(port)
+	# ser = DummySerial(port)
 	ser.open()
 
-	pkt = makeServoIDPacket(ser, curr_id, new_id)
+	pkt = makeServoIDPacket(curr_id, new_id)
 
 	err, err_str = ser.sendPkt(pkt)
 	print('Error: {}'.format(err))

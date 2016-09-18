@@ -1,10 +1,18 @@
 #!/usr/bin/env python
+##############################################
+# The MIT License (MIT)
+# Copyright (c) 2016 Kevin Walchko
+# see LICENSE for full details
+##############################################
 
 from __future__ import division, print_function
 import serial as PySerial
 import Packet
 import commands
 
+"""
+Serial interfaces (real and test) for communications with XL-320 servos.
+"""
 
 class DummySerial(object):
 	"""
@@ -25,6 +33,9 @@ class DummySerial(object):
 	def sendPkt(self, pkt):
 		print('serial write >>', pkt)
 		return 0, None
+
+	def readPkts(self, how_much=128):
+		return [[0xFF, 0xFF, 0xFD, 0x00, 0x01, 0x04, 0x00, 0x55, 0x00, 0xA1, 0x0C], [0xFF, 0xFF, 0xFD, 0x00, 0x03, 0x04, 0x00, 0x55, 0x00, 0xA1, 0x0C]]
 
 	def read(self, how_much=128):
 		return [0xFF, 0xFF, 0xFD, 0x00, 0x01, 0x04, 0x00, 0x55, 0x00, 0xA1, 0x0C]
@@ -131,6 +142,20 @@ class ServoSerial(object):
 		if len(d) > 0:  # FIXME: need a better way
 			ret = d[0]  # should i take the last one ... most recent?
 		return ret  # what do i do if i find more?
+
+	def readPkts(self, how_much=128):  # FIXME: 128 might be too much ... what is largest?
+		"""
+		This toggles the RTS pin and reads in data. It also converts the buffer
+		back into a list of bytes and searches through the list to find valid
+		packets of info.
+		"""
+		self.serial.setRTS(self.DD_READ)
+		PySerial.time.sleep(self.SLEEP_TIME)
+		data = self.serial.read(how_much)
+		data = self.decode(data)
+		# return data
+		ret = Packet.findPkt(data)
+		return ret
 
 	def write(self, pkt):
 		"""

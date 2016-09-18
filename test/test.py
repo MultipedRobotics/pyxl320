@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+##############################################
+# The MIT License (MIT)
+# Copyright (c) 2016 Kevin Walchko
+# see LICENSE for full details
+##############################################
+# Tests for continous integration
 
 from pyxl320.Packet import le, crc16, findPkt, getPacketType, getErrorString
 
