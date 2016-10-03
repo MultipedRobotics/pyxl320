@@ -9,10 +9,10 @@
 from __future__ import print_function
 from pyxl320.Packet import makePingPacket, packetToDict
 from pyxl320 import ServoSerial
-from pyxl320 import DummySerial
+# from pyxl320 import DummySerial
 from pyxl320 import utils
 import argparse
-import time
+# import time
 from pyxl320 import xl320
 
 
@@ -39,8 +39,8 @@ def sweep(port, rate, max):
 				servo = packetToDict(pkt)
 				utils.prettyPrintPacket(servo)
 				print('raw pkt: {}'.format(pkt))
-		else:
-			print('cnt {} not found'.format(cnt))
+		# else:
+		# 	print('cnt {} not found'.format(cnt))
 
 		cnt -= 1
 
