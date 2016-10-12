@@ -22,8 +22,8 @@ class NoseTestCommand(TestCommand):
 class PublishCommand(TestCommand):
 	def run_tests(self):
 		print('Publishing to PyPi ...')
-		os.system("python setup.py sdist")
-		os.system("twine upload dist/pyxl320-{}.tar.gz".format(VERSION))
+		os.system("python setup.py bdist_wheel")
+		os.system("twine upload dist/pyxl320-{}*.whl".format(VERSION))
 
 
 class GitTagCommand(TestCommand):
@@ -36,7 +36,7 @@ class GitTagCommand(TestCommand):
 class CleanCommand(TestCommand):
 	def run_tests(self):
 		print('Cleanning up ...')
-		os.system('rm -fr pyxl320.egg-info dist')
+		os.system('rm -fr pyxl320.egg-info dist build')
 
 
 setup(
@@ -47,7 +47,8 @@ setup(
 	description='A library to control dynamixel XL-320 servos with python',
 	long_description=open('README.rst').read(),
 	url='http://github.com/walchko/pyxl320',
-	classifiers=['Development Status :: 4 - Beta',
+	classifiers=[
+		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
 		'License :: OSI Approved :: MIT License',
 		'Operating System :: OS Independent',
@@ -73,7 +74,7 @@ setup(
 	},
 	scripts=[
 		'bin/set_id.py',
-		'bin/servo_ping'
+		'bin/servo_ping.py'
 	],
 	# entry_points={
 	# 	'console_scripts': [
