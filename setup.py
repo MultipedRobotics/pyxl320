@@ -72,7 +72,8 @@ setup(
 		'clean': CleanCommand
 	},
 	scripts=[
-		'bin/set_id.py'
+		'bin/set_id.py',
+		'bin/servo_ping'
 	],
 	# entry_points={
 	# 	'console_scripts': [

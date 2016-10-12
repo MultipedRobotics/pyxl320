@@ -31,7 +31,7 @@ class DummySerial(object):
 		pass
 
 	def sendPkt(self, pkt):
-		print('serial write >>', pkt)
+# 		print('serial write >>', pkt)
 		return 0, None
 
 	def readPkts(self, how_much=128):
@@ -42,7 +42,7 @@ class DummySerial(object):
 
 	def write(self, data):
 		# if self.printAll:
-		print('serial write >>', data)
+# 		print('serial write >>', data)
 		return len(data)
 
 	def close(self):
