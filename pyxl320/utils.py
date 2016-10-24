@@ -68,7 +68,7 @@ class JsonFile(object):
 		Writes a Json file
 
 		in: fname - file name
-		    data - dictionary of data to put into the file
+			data - dictionary of data to put into the file
 
 		out: nothing, everything is written to a file
 		"""

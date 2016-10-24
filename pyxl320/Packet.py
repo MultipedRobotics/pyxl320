@@ -201,7 +201,7 @@ def makeServoPacket(ID, angle):
 	Commands the servo to an angle (in degrees)
 	"""
 	if not (0.0 <= angle <= 300.0):
-		raise Exception('moveServo(), angle out of bounds: {}'.format(angle))
+		raise Exception('makeServoPacket(), angle out of bounds: {}'.format(angle))
 	val = int(angle/300*1023)
 	# lo, hi = le(val)
 	# print('servo cmd {} deg : {} : L {} H {}'.format(angle, val, lo, hi))
