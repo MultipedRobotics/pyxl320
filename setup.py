@@ -75,6 +75,7 @@ setup(
 	scripts=[
 		'bin/set_id.py',
 		'bin/servo_ping.py'
+		'bin/set_angle.py'
 	],
 	# entry_points={
 	# 	'console_scripts': [

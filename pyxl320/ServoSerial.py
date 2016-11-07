@@ -173,32 +173,36 @@ class ServoSerial(object):
 		self.serial.flushOutput()  # flush anything in the buffer
 		return num
 
-	def sendPkt(self, pkt):
+	def sendPkt(self, pkt, cnt=5):
 		"""
 		Sends a packet and waits for a return. If no return is given, then it
 		resends the packet. If an error occurs, it also resends the packet.
 
-		in: pkt - command packet to send to servo
+		in:
+			pkt - command packet to send to servo
+			cnt - how many retries should this do? default = 5
 		out:
 			err_num - 0 if good, >0 if error
 			err_str - None if good, otherwise a string
 		"""
 		err_num = 0
 		err_str = None
-		wait_for_return = True
-		while wait_for_return:
+		wait_for_return = cnt
+		while wait_for_return:  # changed this so it is no longer infinite retry
 			# print('going write')
 			self.write(pkt)  # send packet to servo
 			ans = self.read()  # get return status packet
 			if ans:
-				wait_for_return = False
+				wait_for_return = 0
 				err_num, err_str = Packet.getErrorString(ans)
 				if err_num:  # something went wrong, exit function
 					print('Error[{}]: {}'.format(err_num, err_str))
-					wait_for_return = True
+					wait_for_return = 0
 				else:
 					print('packet {}'.format(ans))
 			else:
+				cnt -= 1
+				err_num = 0x01
 				print('>> retry <<')
 		return err_num, err_str
 

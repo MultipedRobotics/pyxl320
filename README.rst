@@ -113,6 +113,7 @@ Hardware
 	:align: center
 
 I have used the `74LS241 <http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html>`_
+to talk to the xl-320.
 
 References:
 -------------
