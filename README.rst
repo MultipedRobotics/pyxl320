@@ -111,7 +111,8 @@ Hardware
 
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/circuit.png
 	:align: center
-	I have used the `74LS241 <http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html>`_
+
+I have used the `74LS241 <http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html>`_
 
 References:
 -------------
