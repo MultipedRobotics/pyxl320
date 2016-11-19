@@ -2,7 +2,7 @@
 
 # from pyxl320 import ServoSerial
 from pyxl320 import Packet
-from pyxl320 import DummySerial
+# from pyxl320 import DummySerial
 from pyxl320 import ServoSerial
 import argparse
 
@@ -31,7 +31,7 @@ def main():
 	pkt = Packet.makeServoPacket(ID, angle)  # move servo 1 to 158.6 degrees
 	err_no, err_str = serial.sendPkt(pkt)  # send packet to servo
 	if err_no:
-		print('Oops ... something went wrong!')
+		print('Oops ... something went wrong!: {}'.format(err_str))
 
 if __name__ == '__main__':
 	main()

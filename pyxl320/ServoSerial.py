@@ -187,23 +187,22 @@ class ServoSerial(object):
 		"""
 		err_num = 0
 		err_str = None
-		wait_for_return = cnt
-		while wait_for_return:  # changed this so it is no longer infinite retry
+		while (cnt > 0):  # changed this so it is no longer infinite retry
 			# print('going write')
 			self.write(pkt)  # send packet to servo
 			ans = self.read()  # get return status packet
 			if ans:
-				wait_for_return = 0
+				cnt = 0
 				err_num, err_str = Packet.getErrorString(ans)
 				if err_num:  # something went wrong, exit function
 					print('Error[{}]: {}'.format(err_num, err_str))
-					wait_for_return = 0
+					cnt = 0
 				else:
 					print('packet {}'.format(ans))
 			else:
 				cnt -= 1
 				err_num = 0x01
-				print('>> retry <<')
+				print('>> retry {} <<'.format(cnt))
 		return err_num, err_str
 
 	def close(self):

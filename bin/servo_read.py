@@ -16,35 +16,55 @@ import argparse
 from pyxl320 import xl320
 
 
-class ServoBase(object):
-	"""
-	Does this add value?
+# class ServoBase(object):
+# 	"""
+# 	Does this add value?
+#
+# 	maybe just use servoserial instead?
+# 	"""
+# 	def __init__(self):
+# 		pass
+#
+# 	def open(self, port, rate=1000000):
+# 		self.serial = ServoSerial(port, rate)
+# 		# self.serial = DummySerial(port, rate)
+#
+# 	def close(self):
+# 		self.serial.close()
 
-	maybe just use servoserial instead?
-	"""
-	def __init__(self):
-		pass
 
-	def open(self, port, rate=1000000):
-		self.serial = ServoSerial(port, rate)
-		# self.serial = DummySerial(port, rate)
-
-	def close(self):
-		self.serial.close()
-
-
-class ServoInfo(ServoBase):
-	def __init__(self):
-		pass
+class ServoInfo(ServoSerial):
+	def __init__(self, port, rate):
+		ServoSerial.__init__(self, port, rate)
 
 	def getInfo(self, ID):
+		if not self.serial.isOpen():
+			self.serial.open()
 		pkt = None
 		ans = self.serial.sendPkt(pkt)
+		self.info = ans
 		return ans
 
-	def printInfo(self, ID):
-		ans = self.getInfo(ID)
-		print(ans)
+	def printInfo(self, info=None):
+		# ans = self.getInfo(ID)
+		if info is None:
+			info = self.info  # need to check this exists first
+		print(info)
+
+
+class ServoPing(ServoInfo):
+	def __init__(self, port, rate):
+		ServoInfo.__init__(self, port, rate)
+
+	def ping(self, ID):
+		self.getInfo(ID)
+		print('---------------------------------------------')
+		self.printInfo()
+
+	def pingAll(self):
+		for ID in range(0, 250):
+			self.ping(ID)
+		self.close()
 
 
 def sweep(port, rate, max):

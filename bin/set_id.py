@@ -10,7 +10,7 @@
 
 from __future__ import print_function, division
 from pyxl320 import ServoSerial, Packet, xl320
-from pyxl320 import DummySerial
+# from pyxl320 import DummySerial
 import argparse
 
 
@@ -57,7 +57,8 @@ def main():
 	pkt = makeServoIDPacket(curr_id, new_id)
 
 	err, err_str = ser.sendPkt(pkt)
-	print('Error: {}'.format(err))
+	if err:
+		print('Error: {} {}'.format(err, err_str))
 
 if __name__ == '__main__':
 	main()
