@@ -16,10 +16,41 @@ import argparse
 from pyxl320 import xl320
 
 
-def sweep(port, rate, max):
+class ServoPing(ServoSerial):
+	"""
+	Useful???
+
+	this might replace the function below
+	"""
+	def __init__(self, port, rate):
+		ServoSerial.__init__(self, port, rate)
+		self.open()
+
+	def ping(self, ID):
+		pkt = makePingPacket(ID)
+		ret = self.sendPkt(pkt, 3)  # not sure if I need 3 retries on the packet
+		if ret:
+			print('---------------------------------------------')
+			servo = packetToDict(ret)
+			utils.prettyPrintPacket(servo)
+			print('raw pkt: {}'.format(ret))
+
+	def pingRange(self, start, stop):
+		for ID in range(start, stop):
+			self.ping(ID)
+		self.close()
+
+	def pingAll(self):
+		self.ping(xl320.XL320_BROADCAST_ADDR)
+		self.close()
+
+
+def sweep(port, rate, retry=3):
 	"""
 	Sends a ping packet to ID's from 0 to maximum and prints out any returned
 	messages.
+
+	Actually send a broadcast and will retry (resend) the ping 3 times ...
 	"""
 	s = ServoSerial(port, rate)
 	# s = DummySerial(port, rate)
@@ -30,7 +61,7 @@ def sweep(port, rate, max):
 	s.write(pkt)
 
 	# as more servos add up, I might need to increase the cnt number???
-	cnt = 3
+	cnt = retry
 	while cnt:
 		ans = s.readPkts()
 
