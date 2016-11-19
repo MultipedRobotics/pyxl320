@@ -80,7 +80,7 @@ def sweep(port, rate, retry=3):
 
 def handleArgs():
 	parser = argparse.ArgumentParser(description='ping servos')
-	parser.add_argument('-m', '--max', help='max id', type=int, default=253)
+	# parser.add_argument('-m', '--max', help='max id', type=int, default=253)
 	parser.add_argument('-r', '--rate', help='servo baud rate', type=int, default=1000000)
 	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/tty.usbserial-A5004Flb')
 
@@ -90,4 +90,5 @@ def handleArgs():
 
 if __name__ == '__main__':
 	args = handleArgs()
-	sweep(args['port'], args['rate'], args['max'])
+	print('Finding all servos:')
+	sweep(args['port'], args['rate'])
