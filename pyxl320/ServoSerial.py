@@ -130,7 +130,7 @@ class ServoSerial(object):
 		"""
 		This toggles the RTS pin and reads in data. It also converts the buffer
 		back into a list of bytes and searches through the list to find valid
-		packets of info.
+		packets of info. This only returns the first packet in the buffer.
 		"""
 		self.serial.setRTS(self.DD_READ)
 		PySerial.time.sleep(self.SLEEP_TIME)
@@ -147,7 +147,8 @@ class ServoSerial(object):
 		"""
 		This toggles the RTS pin and reads in data. It also converts the buffer
 		back into a list of bytes and searches through the list to find valid
-		packets of info.
+		packets of info. If there is more than one packet, this returns an
+		array of valid packets.
 		"""
 		self.serial.setRTS(self.DD_READ)
 		PySerial.time.sleep(self.SLEEP_TIME)
@@ -197,8 +198,8 @@ class ServoSerial(object):
 				if err_num:  # something went wrong, exit function
 					print('Error[{}]: {}'.format(err_num, err_str))
 					cnt = 0
-				else:
-					print('packet {}'.format(ans))
+				# else:
+				# 	print('packet {}'.format(ans))
 			else:
 				cnt -= 1
 				err_num = 0x01

@@ -54,7 +54,12 @@ To submit git pulls, clone the repository and set it up as follows:
 Usage
 --------
 
-.. code:: python
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/green.jpg
+	:align: center
+
+A simple example to turn the servo and turn the LED to green:
+
+.. code-block:: python
 
 	from pyxl320 import xl320
 	from pyxl320 import ServoSerial, Packet, utils
@@ -66,14 +71,16 @@ Usage
 	err_num, err_str = serial.sendPkt(pkt)  # send packet to servo
 
 	if err_num:
-		pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_RED)
-		serial.sendPkt(pkt)
 		raise Exception('servo error: {}'.format(err_str)
 
-Al though I have made some packet creators (like LED and Servo), you can make
+	pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_GREEN)
+	serial.sendPkt(pkt)
+
+
+Although I have made some packet creators (like LED and Servo), you can make
 your own using the basic ``makeWritePacket`` and ``makeReadPacket``.
 
-.. code:: python
+.. code-block:: python
 
 	from pyxl320 import Packet, xl320
 	from pyxl320.Packet import le  # creates little endian numbers
@@ -94,6 +101,7 @@ Header                   ID  Length         Instruction Parameter               
 [0xFF, 0xFF, 0xFD, 0x00] ID  [LEN_L, LEN_H] INST        [PARAM 1, PARAM 2, ..., PARAM N] [CRC_L, CRC_H]
 ======================== === ============== =========== ================================ ===============
 
+
 A status packet back from the servo follows the same format, but the instruction
 is always ``0x55`` and maybe followed by error codes if something is wrong.
 The length of the packet is aways the entire length minus header, id, and crc.
@@ -112,6 +120,9 @@ Hardware
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/circuit.png
 	:align: center
 
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/servo_angles.png
+	:align: center
+
 I have used the `74LS241 <http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html>`_
 to talk to the xl-320.
 
@@ -120,6 +131,8 @@ References:
 
 Unfortunately the Dynamixel references below are **not written well** (many typos
 and errors throughout), so please be careful or you will exhibit much frustration.
+Also they have disappeared at times, so if you get a ``404`` error, hopefully they
+will come back.
 
 - `XL-320 e-Manual <http://support.robotis.com/en/product/dynamixel/x_series/xl-320.htm>`_
 - `XL-320 hardware and half duplex circuit <http://support.robotis.com/en/product/dynamixel/xl-320.htm>`_
@@ -127,13 +140,10 @@ and errors throughout), so please be careful or you will exhibit much frustratio
 - `PySerial <http://pyserial.readthedocs.io/en/latest/index.html>`_
 
 ToDo
-------
+-----
 
-- look at using python ``struct`` for packets
-- clean up packet reading, sometimes get a ``0`` appended at beginning or end
-- look at using a class system instead of functions for packets
-- look at setting up a servo based on a json file
-- more helper functions in ``utils`` and or ``bin``
+- bulk read/write
+- sync read/write
 
 Change Log
 -------------

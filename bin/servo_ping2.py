@@ -45,43 +45,45 @@ class ServoPing(ServoSerial):
 		self.close()
 
 
-def sweep(port, rate, retry=3):
-	"""
-	Sends a ping packet to ID's from 0 to maximum and prints out any returned
-	messages.
-
-	Actually send a broadcast and will retry (resend) the ping 3 times ...
-	"""
-	s = ServoSerial(port, rate)
-	# s = DummySerial(port, rate)
-
-	s.open()
-	pkt = makePingPacket(xl320.XL320_BROADCAST_ADDR)
-	s.write(pkt)
-	s.write(pkt)
-
-	# as more servos add up, I might need to increase the cnt number???
-	cnt = retry
-	while cnt:
-		ans = s.readPkts()
-
-		if ans:
-			for pkt in ans:
-				servo = packetToDict(pkt)
-				utils.prettyPrintPacket(servo)
-				print('raw pkt: {}'.format(pkt))
-		# else:
-		# 	print('cnt {} not found'.format(cnt))
-
-		cnt -= 1
-		time.sleep(1)
-
-	s.close()
+# def sweep(port, rate, retry=3):
+# 	"""
+# 	Sends a ping packet to ID's from 0 to maximum and prints out any returned
+# 	messages.
+#
+# 	Actually send a broadcast and will retry (resend) the ping 3 times ...
+# 	"""
+# 	s = ServoSerial(port, rate)
+# 	# s = DummySerial(port, rate)
+#
+# 	s.open()
+# 	pkt = makePingPacket(xl320.XL320_BROADCAST_ADDR)
+# 	s.write(pkt)
+# 	s.write(pkt)
+#
+# 	# as more servos add up, I might need to increase the cnt number???
+# 	cnt = retry
+# 	while cnt:
+# 		ans = s.readPkts()
+#
+# 		if ans:
+# 			for pkt in ans:
+# 				servo = packetToDict(pkt)
+# 				utils.prettyPrintPacket(servo)
+# 				print('raw pkt: {}'.format(pkt))
+# 		# else:
+# 		# 	print('cnt {} not found'.format(cnt))
+#
+# 		cnt -= 1
+# 		time.sleep(1)
+#
+# 	s.close()
 
 
 def handleArgs():
 	parser = argparse.ArgumentParser(description='ping servos')
 	# parser.add_argument('-m', '--max', help='max id', type=int, default=253)
+	# parser.add_argument('-a', '--all', help='reset all servos to defaults', action='store_true')
+	parser.add_argument('-i', '--id', help='servo id', type=int, default=-1)
 	parser.add_argument('-r', '--rate', help='servo baud rate', type=int, default=1000000)
 	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/tty.usbserial-A5004Flb')
 
@@ -92,4 +94,10 @@ def handleArgs():
 if __name__ == '__main__':
 	args = handleArgs()
 	print('Finding all servos:')
-	sweep(args['port'], args['rate'])
+	# sweep(args['port'], args['rate'])
+	sp = ServoPing()
+
+	if args['id'] == -1:
+		sp.pingAll()
+	else:
+		sp.ping(args['id'])

@@ -9,12 +9,18 @@ This information is specific to Dynamixel's XL-320 servo motor.
 http://support.robotis.com/en/product/dynamixel/xl-series/xl-320.htm
 """
 # --------- INSTRUCTIONS -----
-XL320_PING   = 0x01
-XL320_READ   = 0x02
-XL320_WRITE  = 0x03
-XL320_RESET  = 0x06
-XL320_REBOOT = 0x08
-XL320_STATUS = 0x55
+XL320_PING      = 0x01
+XL320_READ      = 0x02
+XL320_WRITE     = 0x03
+XL320_REG_WRITE = 0x04
+XL320_ACTION    = 0x05
+XL320_RESET     = 0x06
+XL320_REBOOT    = 0x08
+XL320_STATUS    = 0x55
+XL320_SYNC_READ  = 0x82
+XL320_SYNC_WRITE = 0x83
+XL320_BULK_READ  = 0x92
+XL320_BULK_WRITE = 0x93
 
 # -------- EEPROM -------------
 XL320_MODEL_NUMBER    = 0
@@ -33,9 +39,15 @@ XL320_TORQUE_ENABLE    = 24  # servo mode on/off - turn into wheel
 XL320_LED              = 25
 XL320_GOAL_POSITION    = 30
 XL320_GOAL_VELOCITY    = 32
+XL320_GOAL_TORQUE      = 35
 XL320_PRESENT_POSITION = 37  # current servo angle
+XL320_PRESENT_SPEED    = 39  # current speed
 XL320_PESENT_LOAD      = 41  # current load
 XL320_PESENT_VOLTAGE   = 45  # current voltage
+XL320_PESENT_TEMP      = 46  # current temperature
+XL320_MOVING           = 49
+XL320_HW_ERROR_STATUS  = 50
+XL320_PUNCH            = 51
 
 # --------- OTHER -------------
 XL320_RESET_ALL                  = 0xFF
