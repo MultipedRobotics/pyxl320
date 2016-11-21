@@ -134,8 +134,8 @@ and errors throughout), so please be careful or you will exhibit much frustratio
 Also they have disappeared at times, so if you get a ``404`` error, hopefully they
 will come back.
 
-- `XL-320 e-Manual <http://support.robotis.com/en/product/dynamixel/x_series/xl-320.htm>`_
-- `XL-320 hardware and half duplex circuit <http://support.robotis.com/en/product/dynamixel/xl-320.htm>`_
+- `XL-320 e-Manual <http://support.robotis.com/en/techsupport_eng.htm#product/actuator/dynamixel_x/xl_series/xl-320.htm>`_
+- `XL-320 hardware and half duplex circuit <http://support.robotis.com/en/product/actuator/dynamixel_x/xl-series_main.htm>`_
 - `Dynamixel Protocol Ver. 2 <http://support.robotis.com/en/product/dynamixel_pro/communication/instruction_status_packet.htm>`_
 - `PySerial <http://pyserial.readthedocs.io/en/latest/index.html>`_
 
