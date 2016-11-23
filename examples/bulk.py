@@ -3,7 +3,7 @@
 from __future__ import print_function
 from __future__ import division
 from pyxl320 import Packet
-# from pyxl320 import ServoSerial
+from pyxl320 import ServoSerial
 from pyxl320 import DummySerial
 from pyxl320 import xl320
 
@@ -37,23 +37,23 @@ def makeBulkAnglePacket(info):
 
 port = '/dev/tty.usbserial-A700h2xE'
 
-# serial = ServoSerial(port)  # use this if you want to talk to real servos
-serial = DummySerial(port)  # use this for simulation
+serial = ServoSerial(port)  # use this if you want to talk to real servos
+# serial = DummySerial(port)  # use this for simulation
 serial.open()
 
 data = [
 	[1, 150],
-	[2, 150+45],
-	[3, 150+45],
+	[2, 150+45+10],
+	[3, 150],
 	[4, 150],
-	[5, 150+45],
-	[6, 150+45],
+	[5, 150+45+10],
+	[6, 150],
 	[7, 150],
-	[8, 150+45],
-	[9, 150+45],
+	[8, 150+45+10],
+	[9, 150],
 	[10, 150],
-	[11, 150+45],
-	[12, 150+45],
+	[11, 150+45+10],
+	[12, 150],
 ]
 
 pkt = makeBulkAnglePacket(data)

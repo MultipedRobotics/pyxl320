@@ -131,7 +131,7 @@ References:
 
 Unfortunately the Dynamixel references below are **not written well** (many typos
 and errors throughout), so please be careful or you will exhibit much frustration.
-Also they have disappeared at times, so if you get a ``404`` error, hopefully they
+Also they have disappeared, so if you get a ``404`` error, hopefully they
 will come back.
 
 - `XL-320 e-Manual <http://support.robotis.com/en/techsupport_eng.htm#product/actuator/dynamixel_x/xl_series/xl-320.htm>`_
