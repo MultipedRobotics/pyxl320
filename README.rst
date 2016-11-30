@@ -142,13 +142,14 @@ will come back.
 ToDo
 -----
 
-- bulk read/write
+- bulk read
 - sync read/write
 
 Change Log
 -------------
 
 ========== ======= =============================
+2016-11-29 0.7.4   add bulk write and small changes
 2016-10-11 0.7.1   small changes/updates
 2016-09-12 0.7.0   refactoring, still working on API
 2016-09-05 0.5.0   published to PyPi
