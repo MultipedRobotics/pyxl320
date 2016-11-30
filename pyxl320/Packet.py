@@ -279,6 +279,32 @@ def makeBaudRatePacket(ID, rate):
 	pkt = makeWritePacket(ID, xl320.XL320_BAUD_RATE, [rate])
 	return pkt
 
+
+def makeBulkAnglePacket(info):
+	"""
+	Write bulk angle information to servos.
+
+	info = [[ID, angle], [ID, angle], ...]
+	"""
+	addr = le(xl320.XL320_GOAL_POSITION)
+	data = []
+	for pkt in info:
+		data.append(pkt[0])  # ID
+		data.append(addr[0])  # LSB
+		data.append(addr[1])  # MSB
+		data.append(2)
+		data.append(0)
+		angle = le(int(pkt[1]/300*1023))
+		data.append(angle[0])  # LSB
+		data.append(angle[1])  # MSB
+
+	ID = xl320.XL320_BROADCAST_ADDR
+	instr = xl320.XL320_BULK_WRITE
+	pkt = makePacket(ID, instr, None, data)  # create packet
+
+	return pkt
+
+
 def getPacketType(pkt):
 	"""
 	Returns the packet type:
@@ -291,6 +317,7 @@ def getPacketType(pkt):
 	XL320_STATUS = 0x55
 	"""
 	return pkt[7]
+
 
 def getErrorString(pkt):
 	"""
@@ -323,7 +350,6 @@ def getErrorString(pkt):
 	]
 	ret = None
 	err = 0
-
 
 	if len(pkt) >= 11 and pkt[7] == xl320.XL320_STATUS:
 			# err = pkt[8] | 128  # remove alert bit
