@@ -57,6 +57,9 @@ Usage
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/green.jpg
 	:align: center
 
+The ``\bin`` directory has a number of useful programs to set servo position or ID number. Just
+run the command with the ``--help`` flag to see how to use it.
+
 A simple example to turn the servo and turn the LED to green:
 
 .. code-block:: python
@@ -159,7 +162,8 @@ Change Log
 License
 ----------
 
-The MIT License (MIT)
+**The MIT License (MIT)**
+
 Copyright (c) 2016 Kevin J. Walchko
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
