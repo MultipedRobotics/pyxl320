@@ -19,6 +19,26 @@ version 2.0 of their protocol.
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/xl-320.jpg
 	:align: center
 
+- Weight : 16.7g
+- Dimension : 24mm *36mm * 27mm
+- Resolution : 0.29°
+- Motor : Cored Motor
+- Gear Reduction Ratio :  238 : 1
+- Stall Torque : 0.39 N.m (at 7.4V, 1.1A)
+- No load speed : 114 rpm (at 7.4V, 0.18A)
+- Running Degree
+	- 0° ~ 300°
+	- Endless Turn
+- Running Temperature : -5℃ ~ +70℃
+- Voltage : 6  ~ 8.4V (Recommended Voltage 7.4V)
+- Command Signal : Digital Packet
+- Protocol Type : Half duplex Asynchronous Serial Communication (8bit,1stop,No Parity)
+- Link (Physical) : TTL Level Multi Drop (daisy chain type Connector)
+- ID : 253 ID (0~252)
+- Communication Speed : 7343bps ~ 1 Mbps
+- Feedback : Position, Temperature, Load, Input Voltage, etc.
+- Material : Engineering Plastic
+
 The library is divided up as follows:
 
  - pyxl320
@@ -53,9 +73,6 @@ To submit git pulls, clone the repository and set it up as follows:
 
 Usage
 --------
-
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/green.jpg
-	:align: center
 
 The ``\bin`` directory has a number of useful programs to set servo position or ID number. Just
 run the command with the ``--help`` flag to see how to use it.
@@ -152,6 +169,7 @@ Change Log
 -------------
 
 ========== ======= =============================
+2017-01-16 0.7.5   fixes some small errors
 2016-11-29 0.7.4   add bulk write and small changes
 2016-10-11 0.7.1   small changes/updates
 2016-09-12 0.7.0   refactoring, still working on API

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__version__ = '0.7.4'
+__version__ = '0.7.5'
 __copyright__ = 'Copyright (c) 2016 Kevin Walchko'
 __license__ = 'MIT'
 __author__ = 'Kevin J. Walchko'
