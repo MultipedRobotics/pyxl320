@@ -83,7 +83,7 @@ def handleArgs():
 	parser = argparse.ArgumentParser(description='ping servos')
 	# parser.add_argument('-m', '--max', help='max id', type=int, default=253)
 	parser.add_argument('-r', '--rate', help='servo baud rate', type=int, default=1000000)
-	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/tty.usbserial-A5004Flb')
+	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/serial0')
 
 	args = vars(parser.parse_args())
 	return args

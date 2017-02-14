@@ -7,3 +7,5 @@ old
 *.egg-info
 dist
 build
+*.zip
+c/
