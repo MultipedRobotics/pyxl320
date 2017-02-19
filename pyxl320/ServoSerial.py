@@ -10,6 +10,9 @@ import serial as PySerial
 import Packet
 import commands
 
+import RPi.GPIO as GPIO
+import time
+
 """
 Serial interfaces (real and test) for communications with XL-320 servos.
 """
@@ -28,6 +31,9 @@ class DummySerial(object):
 		return ServoSerial.listSerialPorts()
 
 	def open(self):
+		pass
+		
+	def setRTS(self):
 		pass
 
 	def sendPkt(self, pkt):
@@ -64,10 +70,15 @@ class ServoSerial(object):
 
 	This class also uses Packet to find and verify what is returned form read()
 	is a valid packet.
+	
+	RPi3 sucks ... they screwed up the serial port, the RTS pin doesn't work so I
+	just toggle pin 17 and treat it as an output pin.
 	"""
-	DD_WRITE = False      # data direction set to write
-	DD_READ = True        # data direction set to read
-	SLEEP_TIME = 0.005    # sleep time between read/write
+# 	DD_WRITE = False      # data direction set to write .. RTS is backwards
+# 	DD_READ = True        # data direction set to read .. RTS is backwards
+	DD_WRITE = True      # data direction set to write
+	DD_READ = False        # data direction set to read
+	SLEEP_TIME = 0.0005    # sleep time between read/write
 
 	def __init__(self, port, baud_rate=1000000):
 		"""
@@ -77,13 +88,23 @@ class ServoSerial(object):
 		self.serial.baudrate = baud_rate
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
-		self.serial.timeout = 0.001  # time out waiting for blocking read()
+		self.serial.timeout = 0.0001  # time out waiting for blocking read()
+		
+		GPIO.setmode(GPIO.BCM)
+		GPIO.setup(17, GPIO.OUT)
 
 	def __del__(self):
 		"""
 		Destructor: closes the serial port
 		"""
 		self.close()
+		GPIO.cleanup()
+		
+	def setRTS(self, level):
+		time.sleep(self.SLEEP_TIME)
+# 		PySerial.time.sleep(self.SLEEP_TIME)
+		GPIO.output(17, level)
+# 		self.serial.setRTS(not level)
 
 	@staticmethod
 	def listSerialPorts():
@@ -108,8 +129,7 @@ class ServoSerial(object):
 		if self.serial.isOpen():
 			raise Exception('SeroSerial::open() ... Oops, port is already open')
 		self.serial.open()
-		self.serial.setRTS(self.DD_WRITE)
-		PySerial.time.sleep(self.SLEEP_TIME)
+		self.setRTS(self.DD_WRITE)
 		if self.serial.isOpen():
 			print('Opened {} @ {}'.format(self.serial.name, self.serial.baudrate))
 			print(self.serial.get_settings())
@@ -132,8 +152,7 @@ class ServoSerial(object):
 		back into a list of bytes and searches through the list to find valid
 		packets of info. This only returns the first packet in the buffer.
 		"""
-		self.serial.setRTS(self.DD_READ)
-		PySerial.time.sleep(self.SLEEP_TIME)
+		self.setRTS(self.DD_READ)
 		data = self.serial.read(how_much)
 		data = self.decode(data)
 		# return data
@@ -150,8 +169,7 @@ class ServoSerial(object):
 		packets of info. If there is more than one packet, this returns an
 		array of valid packets.
 		"""
-		self.serial.setRTS(self.DD_READ)
-		PySerial.time.sleep(self.SLEEP_TIME)
+		self.setRTS(self.DD_READ)
 		data = self.serial.read(how_much)
 		data = self.decode(data)
 		# return data
@@ -163,12 +181,11 @@ class ServoSerial(object):
 		This is a simple serial write command. It toggles the RTS pin and formats
 		all of the data into bytes before it writes.
 		"""
-		self.serial.setRTS(self.DD_WRITE)
+		self.setRTS(self.DD_WRITE)
 		# prep data array for transmition
 		pkt = bytearray(pkt)
 		pkt = bytes(pkt)
 
-		PySerial.time.sleep(self.SLEEP_TIME)
 		num = self.serial.write(pkt)
 		# print('wrote {} of len(pkt) == {}'.format(num, len(data)))
 		self.serial.flushOutput()  # flush anything in the buffer
@@ -189,10 +206,11 @@ class ServoSerial(object):
 		err_num = 0
 		err_str = None
 		while (cnt > 0):  # changed this so it is no longer infinite retry
-			# print('going write')
+# 			print('going write')
 			self.write(pkt)  # send packet to servo
 			ans = self.read()  # get return status packet
 			if ans:
+				# print('ans', ans)
 				cnt = 0
 				err_num, err_str = Packet.getErrorString(ans)
 				if err_num:  # something went wrong, exit function
