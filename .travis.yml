@@ -15,7 +15,9 @@ python:
 #             - nose
 
 # install other libraries using pip
-install: pip install pyserial nose simplejson
+install:
+    - pip install -U pip setuptools
+    - pip install -U pyserial nose simplejson
 
 # command to run tests
 script: nosetests -v test/test.py
