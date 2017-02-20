@@ -60,7 +60,7 @@ setup(
 	license='MIT',
 	keywords='dynamixel xl320 xl-320 servo actuator library robotics spider',
 	packages=['pyxl320'],
-	install_requires=['pyserial', 'simplejson', 'RPi.GPIO'],
+	install_requires=['pyserial', 'simplejson'],
 	setup_requires=[
 		'nose',
 		# 'coverage',

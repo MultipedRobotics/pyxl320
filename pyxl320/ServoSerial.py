@@ -9,13 +9,41 @@ from __future__ import division, print_function
 import serial as PySerial
 import Packet
 import commands
-
-import RPi.GPIO as GPIO
 import time
+import platform
+import os
+
+
+# checking to make sure this is linux AND not travis.ci
+if platform.system().lower() == 'linux' and 'CI' not in os.environ:
+	import RPi.GPIO as GPIO
+else:
+	# import random
+
+	class GPIO(object):
+		IN = True
+		OUT = False
+		BCM = True
+		def __init__(self): print('dummy GPIO')
+		@staticmethod
+		def setwarnings(a): pass
+		@staticmethod
+		def setmode(a): pass
+		@staticmethod
+		def setup(a, b): pass
+		@staticmethod
+		def input(a): return 1
+		@staticmethod
+		def cleanup(): pass
+		@staticmethod
+		def output(a, b): pass
+
+		import time
 
 """
 Serial interfaces (real and test) for communications with XL-320 servos.
 """
+
 
 class DummySerial(object):
 	"""
@@ -32,7 +60,7 @@ class DummySerial(object):
 
 	def open(self):
 		pass
-		
+
 	def setRTS(self):
 		pass
 
@@ -70,7 +98,7 @@ class ServoSerial(object):
 
 	This class also uses Packet to find and verify what is returned form read()
 	is a valid packet.
-	
+
 	RPi3 sucks ... they screwed up the serial port, the RTS pin doesn't work so I
 	just toggle pin 17 and treat it as an output pin.
 	"""
@@ -89,7 +117,7 @@ class ServoSerial(object):
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
 		self.serial.timeout = 0.0001  # time out waiting for blocking read()
-		
+
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(17, GPIO.OUT)
 
@@ -99,7 +127,7 @@ class ServoSerial(object):
 		"""
 		self.close()
 		GPIO.cleanup()
-		
+
 	def setRTS(self, level):
 		time.sleep(self.SLEEP_TIME)
 # 		PySerial.time.sleep(self.SLEEP_TIME)
@@ -206,7 +234,7 @@ class ServoSerial(object):
 		err_num = 0
 		err_str = None
 		while (cnt > 0):  # changed this so it is no longer infinite retry
-# 			print('going write')
+			# print('going write')
 			self.write(pkt)  # send packet to servo
 			ans = self.read()  # get return status packet
 			if ans:
