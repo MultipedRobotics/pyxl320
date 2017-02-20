@@ -156,7 +156,7 @@ Hardware
 I have used the `74LS241 <http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html>`_
 to talk to the xl-320.
 
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/my_test.jpg
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/docs/pics/my_test.jpg
 	:align: center
 	
 Now the `Poppy project <https://github.com/poppy-project/pixl>`_ does it a little
