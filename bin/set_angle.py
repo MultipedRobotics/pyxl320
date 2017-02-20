@@ -7,9 +7,9 @@ import argparse
 
 
 def handleArgs():
-	parser = argparse.ArgumentParser(description='ping servos')
+	parser = argparse.ArgumentParser(description='Sets a servo to an angle')
 	parser.add_argument('-i', '--id', help='servo id', type=int, default=1)
-	parser.add_argument('angle', help='servo angle', type=float)
+	parser.add_argument('angle', help='servo angle in degrees: 0.0 - 300.0', type=float)
 	parser.add_argument('-p', '--port', help='serial port  or \'dummy\' for testing, default is \'/dev/serial0\'', type=str, default='/dev/serial0')
 
 	args = vars(parser.parse_args())
