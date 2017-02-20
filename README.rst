@@ -77,6 +77,16 @@ Usage
 The ``\bin`` directory has a number of useful programs to set servo position or ID number. Just
 run the command with the ``--help`` flag to see how to use it.
 
+==================== ==============================================================
+Command              Description
+==================== ==============================================================
+``servo_ping.py``    pings one or all of the servos
+``servo_reboot.py``  reboots one or all servos
+``servo_reset.py``   resets one or all servos to a specified level
+``set_angle.py``     sets the angle of a given servo
+``set_id.py``        changes the ID number for a given servo
+==================== ==============================================================
+
 A simple example to turn the servo and turn the LED to green:
 
 .. code-block:: python
@@ -84,7 +94,7 @@ A simple example to turn the servo and turn the LED to green:
 	from pyxl320 import xl320
 	from pyxl320 import ServoSerial, Packet, utils
 
-	serial = ServoSerial('/dev/tty.usbserial')  # tell it what port you want to use
+	serial = ServoSerial('/dev/serial0')  # tell it what port you want to use
 	serial.open()
 
 	pkt = Packet.makeServoPacket(1, 158.6)  # move servo 1 to 158.6 degrees
@@ -134,17 +144,24 @@ See the references below for more details on the instructions, error codes, etc.
 Hardware
 ---------
 
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/servo_angles.png
+	:align: center
+
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/xl320_2.png
 	:align: center
 
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/circuit.png
 	:align: center
 
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/servo_angles.png
-	:align: center
-
 I have used the `74LS241 <http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html>`_
 to talk to the xl-320.
+
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/my_test.jpg
+	:align: center
+	
+Now the `Poppy project <https://github.com/poppy-project/pixl>`_ does it a little
+different and simpler ... I haven't tried it yet. The schematic is in my docs folder.
+
 
 References:
 -------------
@@ -169,6 +186,7 @@ Change Log
 -------------
 
 ========== ======= =============================
+2017-02-20 0.7.6   small fixes and added servo_reboot
 2017-01-16 0.7.5   fixes some small errors
 2016-11-29 0.7.4   add bulk write and small changes
 2016-10-11 0.7.1   small changes/updates
