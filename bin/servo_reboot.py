@@ -44,15 +44,12 @@ def main():
 
 	pkt = Packet.makeRebootPacket(ID)
 
-	err, err_str = ser.sendPkt(pkt)
-	if err:
-		print('Error: {} {}'.format(err, err_str))
-	else:
-		gramar = 'is'
-		if ID == xl320.XL320_BROADCAST_ADDR:
-			ID = 'all'
-			gramar = 'are'
-		print('Servo[{}] {} rebooting'.format(ID, gramar))
+	ser.write(pkt)
+	gramar = 'is'
+	if ID == xl320.XL320_BROADCAST_ADDR:
+		ID = 'all'
+		gramar = 'are'
+	print('Servo[{}] {} rebooting'.format(ID, gramar))
 
 
 if __name__ == '__main__':

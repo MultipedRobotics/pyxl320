@@ -5,7 +5,8 @@
 # see LICENSE for full details
 ##############################################
 
-from __future__ import division, print_function
+from __future__ import division
+from __future__ import print_function
 import xl320
 
 """
@@ -280,6 +281,39 @@ def makeBaudRatePacket(ID, rate):
 	return pkt
 
 
+def makeSyncAnglePacket(info):
+	"""
+	Write sync angle information to servos.
+
+	info = [[ID, angle], [ID, angle], ...]
+	"""
+	addr = le(xl320.XL320_GOAL_POSITION)
+	data = []
+
+	# since all servo angles have the same register addr (XL320_GOAL_POSITION)
+	# and data size (2), a sinc packet is smart choice
+	# compare bulk vs sync for the same commands:
+	# bulk = 94 bytes
+	# sync = 50 bytes
+	data.append(addr[0])  # LSB
+	data.append(addr[1])  # MSB
+	data.append(2)  # data size LSM
+	data.append(0)  # data size MSB
+	for pkt in info:
+		data.append(pkt[0])  # ID
+		angle = le(int(pkt[1]/300*1023))
+		data.append(angle[0])  # LSB
+		data.append(angle[1])  # MSB
+
+	ID = xl320.XL320_BROADCAST_ADDR
+	instr = xl320.XL320_SYNC_WRITE
+	pkt = makePacket(ID, instr, None, data)  # create packet
+
+	# print(pkt)
+
+	return pkt
+
+
 def makeBulkAnglePacket(info):
 	"""
 	Write bulk angle information to servos.
@@ -292,7 +326,7 @@ def makeBulkAnglePacket(info):
 		data.append(pkt[0])  # ID
 		data.append(addr[0])  # LSB
 		data.append(addr[1])  # MSB
-		data.append(2)
+		data.append(2)  # 2 bytes
 		data.append(0)
 		angle = le(int(pkt[1]/300*1023))
 		data.append(angle[0])  # LSB

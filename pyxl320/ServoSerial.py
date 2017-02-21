@@ -19,6 +19,7 @@ if platform.system().lower() == 'linux' and 'CI' not in os.environ:
 	import RPi.GPIO as GPIO
 else:
 	# import random
+	print('WARNING: using fake RPi.GPIO')
 
 	class GPIO(object):
 		IN = True
@@ -106,6 +107,7 @@ class ServoSerial(object):
 # 	DD_READ = True        # data direction set to read .. RTS is backwards
 	DD_WRITE = True      # data direction set to write
 	DD_READ = False        # data direction set to read
+	# SLEEP_TIME = 0.0005    # sleep time between read/write
 	SLEEP_TIME = 0.0005    # sleep time between read/write
 
 	def __init__(self, port, baud_rate=1000000):
@@ -214,9 +216,12 @@ class ServoSerial(object):
 		pkt = bytearray(pkt)
 		pkt = bytes(pkt)
 
+		# num = self.serial.write(pkt)
+		# self.read()
 		num = self.serial.write(pkt)
-		# print('wrote {} of len(pkt) == {}'.format(num, len(data)))
-		self.serial.flushOutput()  # flush anything in the buffer
+		print('wrote {} of len(pkt) = {}'.format(num, len(pkt)))
+		# self.serial.flushOutput()  # flush anything in the buffer
+		self.read()
 		return num
 
 	def sendPkt(self, pkt, cnt=5):
