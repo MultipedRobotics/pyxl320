@@ -6,6 +6,7 @@ from __future__ import division
 from pyxl320.Packet import makeSyncAnglePacket
 from pyxl320 import ServoSerial
 from pyxl320 import DummySerial
+import sys
 # from pyxl320 import xl320
 # import time
 
@@ -42,6 +43,11 @@ from pyxl320 import DummySerial
 #
 # 	return pkt
 
+if len(sys.argv) != 2:
+	print(sys.argv[0], 'needs an angle (degrees): sync.py 200')
+	exit()
+
+angle = float(sys.argv[1])
 
 port = '/dev/serial0'
 # port = None
@@ -56,21 +62,21 @@ else:
 serial.open()
 
 data = [
-	[1, 150.],
-	[2, 150],
-	[3, 150],
+	[1, angle],
+	[2, angle],
+	[3, angle],
 
-	[4, 150],
-	[5, 150],
-	[6, 150],
+	[4, angle],
+	[5, angle],
+	[6, angle],
 
-	[7, 150],
-	[8, 150],
-	[9, 150],
+	[7, angle],
+	[8, angle],
+	[9, angle],
 
-	[10, 150],
-	[11, 150],
-	[12, 150],
+	[10, angle],
+	[11, angle],
+	[12, angle],
 ]
 
 pkt = makeSyncAnglePacket(data)
