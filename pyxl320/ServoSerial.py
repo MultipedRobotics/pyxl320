@@ -15,31 +15,30 @@ import os
 
 
 # checking to make sure this is linux AND not travis.ci
-if platform.system().lower() == 'linux' and 'CI' not in os.environ:
-	import RPi.GPIO as GPIO
-else:
-	# import random
-	print('WARNING: using fake RPi.GPIO')
+# if platform.system().lower() == 'linux' and 'CI' not in os.environ:
+# 	import RPi.GPIO as GPIO
+# else:
+# 	# import random
+# 	print('WARNING: using fake RPi.GPIO')
+#
+# 	class GPIO(object):
+# 		IN = True
+# 		OUT = False
+# 		BCM = True
+# 		def __init__(self): print('dummy GPIO')
+# 		@staticmethod
+# 		def setwarnings(a): pass
+# 		@staticmethod
+# 		def setmode(a): pass
+# 		@staticmethod
+# 		def setup(a, b): pass
+# 		@staticmethod
+# 		def input(a): return 1
+# 		@staticmethod
+# 		def cleanup(): pass
+# 		@staticmethod
+# 		def output(a, b): pass
 
-	class GPIO(object):
-		IN = True
-		OUT = False
-		BCM = True
-		def __init__(self): print('dummy GPIO')
-		@staticmethod
-		def setwarnings(a): pass
-		@staticmethod
-		def setmode(a): pass
-		@staticmethod
-		def setup(a, b): pass
-		@staticmethod
-		def input(a): return 1
-		@staticmethod
-		def cleanup(): pass
-		@staticmethod
-		def output(a, b): pass
-
-		import time
 
 """
 Serial interfaces (real and test) for communications with XL-320 servos.
@@ -110,9 +109,13 @@ class ServoSerial(object):
 	# SLEEP_TIME = 0.0005    # sleep time between read/write
 	SLEEP_TIME = 0.0005    # sleep time between read/write
 
-	def __init__(self, port, baud_rate=1000000):
+	def __init__(self, port, baud_rate=1000000, rts_hw=0):
 		"""
 		Constructor: sets up the serial port
+
+		If you want to use a USB serial port, then set rts_hw to 0 (False). If you
+		want to use the RPi seiral port, then you need to use a pin to toggle TX/Rx.
+		Set rst_hw to any valid BCM pin greater than 0.
 		"""
 		self.serial = PySerial.Serial()
 		self.serial.baudrate = baud_rate
@@ -120,21 +123,35 @@ class ServoSerial(object):
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
 		self.serial.timeout = 0.0001  # time out waiting for blocking read()
 
-		GPIO.setmode(GPIO.BCM)
-		GPIO.setup(17, GPIO.OUT)
+		if rts_hw:
+			# checking to make sure this is linux AND not travis.ci
+			if platform.system().lower() == 'linux' and 'CI' not in os.environ:
+				import RPi.GPIO as GPIO
+			else:
+				from fakeHW import GPIO
+
+			GPIO.setmode(GPIO.BCM)
+			GPIO.setup(rts_hw, GPIO.OUT)
+			self.gpio = GPIO
+			self.rts_hw = rts_hw
+		else:
+			self.rts_hw = 0
 
 	def __del__(self):
 		"""
 		Destructor: closes the serial port
 		"""
 		self.close()
-		GPIO.cleanup()
+		self.gpio.cleanup()
 
 	def setRTS(self, level):
 		time.sleep(self.SLEEP_TIME)
 # 		PySerial.time.sleep(self.SLEEP_TIME)
-		GPIO.output(17, level)
-# 		self.serial.setRTS(not level)
+
+		if self.rts_hw:
+			self.gpio.output(self.rts_hw, level)
+		else:
+			self.serial.setRTS(not level)
 
 	@staticmethod
 	def listSerialPorts():

@@ -87,14 +87,15 @@ Command              Description
 ``set_id.py``        changes the ID number for a given servo
 ==================== ==============================================================
 
-A simple example to turn the servo and turn the LED to green:
+A simple example to turn the servo and turn the LED to green using a USB serial
+converter:
 
 .. code-block:: python
 
 	from pyxl320 import xl320
 	from pyxl320 import ServoSerial, Packet, utils
 
-	serial = ServoSerial('/dev/serial0')  # tell it what port you want to use
+	serial = ServoSerial('/dev/tty.usbserial')  # tell it what port you want to use
 	serial.open()
 
 	pkt = Packet.makeServoPacket(1, 158.6)  # move servo 1 to 158.6 degrees
@@ -106,6 +107,25 @@ A simple example to turn the servo and turn the LED to green:
 	pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_GREEN)
 	serial.sendPkt(pkt)
 
+The same thing, but now use the built in RPi serial port and use pin 17 to toggle
+Tx/Rx:
+
+.. code-block:: python
+
+	from pyxl320 import xl320
+	from pyxl320 import ServoSerial, Packet, utils
+
+	serial = ServoSerial('/dev/serial0', rts_hw=17)  # tell it what port and GPIO pin you want to use
+	serial.open()
+
+	pkt = Packet.makeServoPacket(1, 158.6)  # move servo 1 to 158.6 degrees
+	err_num, err_str = serial.sendPkt(pkt)  # send packet to servo
+
+	if err_num:
+		raise Exception('servo error: {}'.format(err_str)
+
+	pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_GREEN)
+	serial.sendPkt(pkt)
 
 Although I have made some packet creators (like LED and Servo), you can make
 your own using the basic ``makeWritePacket`` and ``makeReadPacket``.
@@ -158,7 +178,7 @@ to talk to the xl-320.
 
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/docs/pics/my_test.jpg
 	:align: center
-	
+
 Now the `Poppy project <https://github.com/poppy-project/pixl>`_ does it a little
 different and simpler ... I haven't tried it yet. The schematic is in my docs folder.
 
@@ -180,12 +200,13 @@ ToDo
 -----
 
 - bulk read
-- sync read/write
+- sync read
 
 Change Log
 -------------
 
 ========== ======= =============================
+2017-03-19 0.7.7   can switch between GPIO pin and pyserial.setRTS() and sync write
 2017-02-20 0.7.6   small fixes and added servo_reboot
 2017-01-16 0.7.5   fixes some small errors
 2016-11-29 0.7.4   add bulk write and small changes
