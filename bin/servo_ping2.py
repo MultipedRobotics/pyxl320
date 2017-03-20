@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 ##############################################
 # The MIT License (MIT)
 # Copyright (c) 2016 Kevin Walchko
@@ -44,12 +45,12 @@ class ServoPing(ServoSerial):
 						self.db[id] = servo
 					else:
 						print('dup', id)
-						
+
 # 					print('raw pkt: {}'.format(pkt))
 
 			cnt -= 1
 			time.sleep(0.1)
-			
+
 	def print(self):
 		print('Found: {} servos'.format(len(self.db)))
 		for k, v in self.db.items():

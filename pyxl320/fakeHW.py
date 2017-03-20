@@ -1,5 +1,6 @@
-
 # import random
+from __future__ import print_function
+
 print('WARNING: using fake RPi.GPIO')
 
 class GPIO(object):

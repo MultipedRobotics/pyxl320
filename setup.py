@@ -61,11 +61,11 @@ setup(
 	keywords='dynamixel xl320 xl-320 servo actuator library robotics spider',
 	packages=['pyxl320'],
 	install_requires=['pyserial', 'simplejson'],
-	setup_requires=[
-		'nose',
-		# 'coverage',
-		# 'mock'
-	],
+	# setup_requires=[
+	# 	'nose',
+	# 	# 'coverage',
+	# 	# 'mock'
+	# ],
 	cmdclass={
 		'test': NoseTestCommand,
 		'publish': PublishCommand,

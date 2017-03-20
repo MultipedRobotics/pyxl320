@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 ##############################################
 # The MIT License (MIT)
 # Copyright (c) 2016 Kevin Walchko
@@ -19,13 +20,13 @@ from pyxl320 import xl320
 # class ServoPing(ServoSerial):
 # 	"""
 # 	Useful???
-# 
+#
 # 	this might replace the function below
 # 	"""
 # 	def __init__(self, port, rate):
 # 		ServoSerial.__init__(self, port, rate)
 # 		self.open()
-# 
+#
 # 	def ping(self, ID):
 # 		pkt = makePingPacket(ID)
 # # 		err, ret = self.sendPkt(pkt, 3)  # not sure if I need 3 retries on the packet
@@ -37,12 +38,12 @@ from pyxl320 import xl320
 # 			print('raw pkt: {}'.format(ret))
 # 		else:
 # 			print('error:', ret)
-# 
+#
 # 	def pingRange(self, start, stop):
 # 		for ID in range(start, stop):
 # 			self.ping(ID)
 # 		self.close()
-# 
+#
 # 	def pingAll(self):
 # 		self.ping(xl320.XL320_BROADCAST_ADDR)
 # 		self.close()

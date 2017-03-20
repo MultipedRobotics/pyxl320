@@ -26,9 +26,6 @@ Instruction: INST
 Parameters: Param 1 ... Param N
 CRC: crc_l, crc_h
 
-"""
-
-"""
 This code uses:
 http://support.robotis.com/en/product/dynamixel_pro/communication/instruction_status_packet.htm
 """
