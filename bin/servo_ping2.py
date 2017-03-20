@@ -10,11 +10,10 @@
 from __future__ import print_function
 from pyxl320.Packet import makePingPacket, packetToDict
 from pyxl320 import ServoSerial
-# from pyxl320 import DummySerial
 from pyxl320 import utils
 import argparse
 import time
-from pyxl320 import xl320
+# from pyxl320 import xl320
 
 
 class ServoPing(ServoSerial):
@@ -53,6 +52,7 @@ class ServoPing(ServoSerial):
 
 	def print(self):
 		print('Found: {} servos'.format(len(self.db)))
+		print('-------------------------------------')
 		for k, v in self.db.items():
 			utils.prettyPrintPacket(v)
 
@@ -62,7 +62,10 @@ class ServoPing(ServoSerial):
 		self.close()
 
 	def pingAll(self):
-		self.ping(xl320.XL320_BROADCAST_ADDR)
+		# self.ping(xl320.XL320_BROADCAST_ADDR)
+		# self.close()
+		for i in range(25):
+			self.ping(i)
 		self.close()
 
 

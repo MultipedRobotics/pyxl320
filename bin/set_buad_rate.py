@@ -1,12 +1,10 @@
 #!/usr/bin/env python
+
 ##############################################
 # The MIT License (MIT)
 # Copyright (c) 2016 Kevin Walchko
 # see LICENSE for full details
 ##############################################
-#
-#
-#
 
 from __future__ import print_function, division
 # from pyxl320 import ServoSerial

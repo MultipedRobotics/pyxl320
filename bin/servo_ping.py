@@ -17,38 +17,6 @@ import time
 from pyxl320 import xl320
 
 
-# class ServoPing(ServoSerial):
-# 	"""
-# 	Useful???
-#
-# 	this might replace the function below
-# 	"""
-# 	def __init__(self, port, rate):
-# 		ServoSerial.__init__(self, port, rate)
-# 		self.open()
-#
-# 	def ping(self, ID):
-# 		pkt = makePingPacket(ID)
-# # 		err, ret = self.sendPkt(pkt, 3)  # not sure if I need 3 retries on the packet
-# 		ret = self.sendPkt(pkt, 3)  # not sure if I need 3 retries on the packet
-# 		if ret:
-# 			print('---------------------------------------------')
-# 			servo = packetToDict(ret)
-# 			utils.prettyPrintPacket(servo)
-# 			print('raw pkt: {}'.format(ret))
-# 		else:
-# 			print('error:', ret)
-#
-# 	def pingRange(self, start, stop):
-# 		for ID in range(start, stop):
-# 			self.ping(ID)
-# 		self.close()
-#
-# 	def pingAll(self):
-# 		self.ping(xl320.XL320_BROADCAST_ADDR)
-# 		self.close()
-
-
 def sweep(port, rate, retry=3):
 	"""
 	Sends a ping packet to ID's from 0 to maximum and prints out any returned

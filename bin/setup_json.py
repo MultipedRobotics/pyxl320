@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 ##############################################
 # The MIT License (MIT)
 # Copyright (c) 2016 Kevin Walchko
@@ -13,8 +14,9 @@
 from __future__ import print_function, division
 from pyxl320 import DummySerial
 # from pyxl320 import ServoSerial
-from pyxl320 import Packet, xl320
-from pyxl320.Packet import le
+# from pyxl320 import Packet, xl320
+from pyxl320 import Packet
+# from pyxl320.Packet import le
 # import simplejson as json
 from pyxl320.utils import JsonFile
 
@@ -40,6 +42,7 @@ xl320_func = {
 
 data = JsonFile.read('test.json')
 print(data)
+
 
 def main():
 	filename = 'test.json'
