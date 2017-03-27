@@ -87,8 +87,8 @@ Command              Description
 ``set_id.py``        changes the ID number for a given servo
 ==================== ==============================================================
 
-Documentation
-------------------
+`Documentation <https://github.com/walchko/pyxl320/tree/master/docs/Markdown>`_
+-------------------------------------------------------------------------------------
 
 The documents are stored in markdown files in the repo `here <https://github.com/walchko/pyxl320/tree/master/docs/Markdown>`_
 and cover hardware interface and software development. However, a simple example to turn the servo 
