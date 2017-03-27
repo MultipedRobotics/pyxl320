@@ -1,5 +1,6 @@
 # Index
 
+- [Servo Specs](servo.md)
 - [Software](software.md)
 - [Hardware Interface](interface.md)
 
