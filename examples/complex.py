@@ -39,7 +39,7 @@ def status_error(pkt):
 		return 99
 
 
-def run(ID, serial, max, min, delta):
+def run(ID, serial, maxs, mins, delta):
 	sleep_time = 0.2
 	led_color = 0
 	pkt = Packet.makeLEDPacket(ID, xl320.XL320_LED_OFF)
@@ -47,7 +47,7 @@ def run(ID, serial, max, min, delta):
 	pkt = Packet.makeServoPacket(ID, 150)
 	serial.sendPkt(pkt)
 	sleep(1)
-	for angle in range(min, max, delta):
+	for angle in range(mins, maxs, delta):
 		led_color = led_color % 7 + 1
 		pkt = Packet.makeLEDPacket(ID, led_color)
 		serial.sendPkt(pkt)
