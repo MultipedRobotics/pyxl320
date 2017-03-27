@@ -1,6 +1,12 @@
 pyXL320
 =========
 
+.. image:: https://github.com/walchko/pyxl320/blob/master/pics/complex.gif
+    :align: center
+    :target: https://github.com/walchko/pyxl320
+    :alt: animated gif
+
+
 .. image:: https://landscape.io/github/walchko/pyxl320/master/landscape.svg?style=flat
    :target: https://landscape.io/github/walchko/pyxl320/master
    :alt: Code Health
@@ -13,42 +19,16 @@ pyXL320
 .. image:: https://travis-ci.org/walchko/pyxl320.svg?branch=master
     :target: https://travis-ci.org/walchko/pyxl320
 
+
 This is still a work in progress and **only** supports XL-320 and **only**
-version 2.0 of their protocol.
-
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/xl-320.jpg
-	:align: center
-
-- Weight : 16.7g
-- Dimension : 24mm *36mm * 27mm
-- Resolution : 0.29°
-- Motor : Cored Motor
-- Gear Reduction Ratio :  238 : 1
-- Stall Torque : 0.39 N.m (at 7.4V, 1.1A)
-- No load speed : 114 rpm (at 7.4V, 0.18A)
-- Running Degree
-	- 0° ~ 300°
-	- Endless Turn
-- Running Temperature : -5℃ ~ +70℃
-- Voltage : 6  ~ 8.4V (Recommended Voltage 7.4V)
-- Command Signal : Digital Packet
-- Protocol Type : Half duplex Asynchronous Serial Communication (8bit,1stop,No Parity)
-- Link (Physical) : TTL Level Multi Drop (daisy chain type Connector)
-- ID : 253 ID (0~252)
-- Communication Speed : 7343bps ~ 1 Mbps
-- Feedback : Position, Temperature, Load, Input Voltage, etc.
-- Material : Engineering Plastic
-
-The library is divided up as follows:
+version 2.0 of their protocol. The library is divided up as follows:
 
  - pyxl320
  	- **ServoSerial** - half duplex hardware serial interface
 	- **DummySerial** - for testing, doesn't talk to any hardware
-	- **Packet** - creates packets
+	- **Packet** - creates packets to talk to the servo
 	- **utils** - misc
 	- **xl320** - register/command/error definitions for Dynamixel's XL-320 servo
-
-Not everything is implemented, but more will be added over time.
 
 Setup
 --------
@@ -56,16 +36,14 @@ Setup
 Install
 ~~~~~~~~~~~~~
 
-::
+The suggested way to install this is via the ``pip`` command as follows::
 
 	pip install pyxl320
 
 Development
 ~~~~~~~~~~~~~
 
-To submit git pulls, clone the repository and set it up as follows:
-
-::
+To submit git pulls, clone the repository and set it up as follows::
 
 	git clone https://github.com/walchko/pyxl320
 	cd pyxl320
@@ -131,7 +109,7 @@ Change Log
 -------------
 
 ========== ======= =============================
-2017-03-26 0.8.0   major overhaul of interface
+2017-03-26 0.8.0   major overhaul of interface and removed the GPIO stuff since it isn't needed
 2017-03-19 0.7.7   can switch between GPIO pin and pyserial.setRTS() and sync write
 2017-02-20 0.7.6   small fixes and added servo_reboot
 2017-01-16 0.7.5   fixes some small errors
