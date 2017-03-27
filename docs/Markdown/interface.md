@@ -28,3 +28,18 @@ a logic level converter.
 Now, this is more than an interface, it also produces all of the necessary voltages
 (3.3V, 5V, and 7.5V) needed to talk to the servo. I use this one for debugging and
 software development of `pyxl320` when I am on my Macbook. 
+
+
+# References
+
+- [Mosfet logic level converter tutorial](https://learn.sparkfun.com/tutorials/bi-directional-logic-level-converter-hookup-guide)
+- [Adjustable voltage calculator](http://www.reuk.co.uk/wordpress/electric-circuit/lm317-voltage-calculator/)
+
+---
+
+<p align="center">
+	<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+		<img alt="Creative Commons License"  src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" />
+	</a>
+	<br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+</p>
