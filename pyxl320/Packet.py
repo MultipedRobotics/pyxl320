@@ -370,16 +370,16 @@ def getErrorString(pkt):
 	# 	32: '?',
 	# 	64: '?'
 	# }
-	err_str = [
-		'none',
-		'result fail',
-		'instruction error',
-		'crc error',
-		'data range error',
-		'data length error',
-		'?',
-		'?'
-	]
+# 	err_str = [
+# 		'none',
+# 		'result fail',
+# 		'instruction error',
+# 		'crc error',
+# 		'data range error',
+# 		'data length error',
+# 		'?',
+# 		'?'
+# 	]
 	ret = None
 	err = 0
 
