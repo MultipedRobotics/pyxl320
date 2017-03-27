@@ -81,14 +81,11 @@ and turn the LED to green using a USB serial converter:
 	serial.open()
 
 	pkt = Packet.makeServoPacket(1, 158.6)  # move servo 1 to 158.6 degrees
-	err_num, err_str = serial.sendPkt(pkt)  # send packet to servo
-
-	if err_num:
-		raise Exception('servo error: {}'.format(err_str)
+	ret = serial.sendPkt(pkt)  # send packet, I don't do anything with the returned status packet
 
 	pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_GREEN)
 	ret = serial.sendPkt(pkt)
-	print('Status packet:', ret)
+	print('Status packet:', ret)  # here I print out the status packet returned
 
 Although I have made some packet creators (like LED and Servo), you can make
 your own using the basic ``makeWritePacket`` and ``makeReadPacket``.
