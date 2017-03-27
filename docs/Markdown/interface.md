@@ -6,7 +6,7 @@ you can build (or buy) to connect a computer or microcontroller to the servos.
 
 ## Robotis Suggested
 
-![](../../../pics/circuit-old.png)
+![](../../pics/circuit-old.png)
 
 This uses a 74HC126 tri state buffer to interconnect the data line with a standard uart.
 To switch betwen the Tx and Rx signals, a third signal (direction port) is used. In my
@@ -15,7 +15,7 @@ not all USB serial interfaces breakout the RTS pin**
 
 ## Pixl
 
-The [Poppy Project]() designed an ingenious board call [Pixl](https://github.com/poppy-project/pixl)
+The [Poppy Project](https://www.poppy-project.org) designed an ingenious board call [Pixl](https://github.com/poppy-project/pixl)
 that allows a standard uart (without the extra direction pin) to talk to the servos.
 This is the hardware design I am currently using.
 
