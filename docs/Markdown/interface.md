@@ -43,6 +43,13 @@ Now, this is more than an interface, it also produces all of the necessary volta
 (3.3V, 5V, and 7.5V) needed to talk to the servo. I use this one for debugging and
 software development of `pyxl320` when I am on my Macbook. 
 
+## What Happened to the Raspberry Pi GPIO Version
+
+An earlier version of my library used the RPi's GPIO pin 17 as the direction pin when
+I used the 74LS241 chip above. It worked, but once I switched the Pixl interface, it
+became redundant. Since I didn't need it any more, I removed it. If you use a standard
+USB-to-serial converter or the RPi's uart, **you don't need GPIO if you use the Pixl
+circuit** shown above.
 
 # References
 
