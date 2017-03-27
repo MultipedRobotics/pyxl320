@@ -87,8 +87,12 @@ Command              Description
 ``set_id.py``        changes the ID number for a given servo
 ==================== ==============================================================
 
-A simple example to turn the servo and turn the LED to green using a USB serial
-converter:
+Documentation
+------------------
+
+The documents are stored in markdown files in the repo `here <https://github.com/walchko/pyxl320/tree/master/docs/Markdown>`_
+and cover hardware interface and software development. However, a simple example to turn the servo 
+and turn the LED to green using a USB serial converter:
 
 .. code-block:: python
 
@@ -96,27 +100,6 @@ converter:
 	from pyxl320 import ServoSerial, Packet, utils
 
 	serial = ServoSerial('/dev/tty.usbserial')  # tell it what port you want to use
-	serial.open()
-
-	pkt = Packet.makeServoPacket(1, 158.6)  # move servo 1 to 158.6 degrees
-	err_num, err_str = serial.sendPkt(pkt)  # send packet to servo
-
-	if err_num:
-		raise Exception('servo error: {}'.format(err_str)
-
-	pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_GREEN)
-	ret = serial.sendPkt(pkt)
-	print('Status packet:', ret)
-
-The same thing, but now use the built in RPi serial port and use pin 17 to toggle
-Tx/Rx:
-
-.. code-block:: python
-
-	from pyxl320 import xl320
-	from pyxl320 import ServoSerial, Packet, utils
-
-	serial = ServoSerial('/dev/serial0', rts_hw=17)  # tell it what port and GPIO pin you want to use
 	serial.open()
 
 	pkt = Packet.makeServoPacket(1, 158.6)  # move servo 1 to 158.6 degrees
@@ -144,77 +127,11 @@ your own using the basic ``makeWritePacket`` and ``makeReadPacket``.
 	pkt = Packet.makeWritePacket(ID, reg, params)
 
 
-Packet Basics
----------------
-
-======================== === ============== =========== ================================ ===============
-Header                   ID  Length         Instruction Parameter                        CRC
-======================== === ============== =========== ================================ ===============
-[0xFF, 0xFF, 0xFD, 0x00] ID  [LEN_L, LEN_H] INST        [PARAM 1, PARAM 2, ..., PARAM N] [CRC_L, CRC_H]
-======================== === ============== =========== ================================ ===============
-
-
-A status packet back from the servo follows the same format, but the instruction
-is always ``0x55`` and maybe followed by error codes if something is wrong.
-The length of the packet is aways the entire length minus header, id, and crc.
-Also remember, the packets are little-endian, so place numbers in the packet
-as ``[LSB, MSB]``. You can use the function ``le()`` in ``Packet`` to accomplish
-this.
-
-See the references below for more details on the instructions, error codes, etc.
-
-Hardware
----------
-
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/servo_angles.png
-	:align: center
-
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/xl320_2.png
-	:align: center
-
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/circuit-old.png
-	:align: center
-
-The above is the suggested circuit to talk with the servos, but there are others.
-
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/circuit.png
-	:align: center
-
-I have used the `74LS241 <http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html>`_
-to talk to the xl-320. It works, but requires an extra pin, I use the RTS pin
-of the serial port to toggle direction.
-
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/docs/pics/my_test.jpg
-	:align: center
-
-Now the `Poppy project <https://github.com/poppy-project/pixl>`_ does it a little
-different and simpler and is what I am using now. It simplifies the design by
-adding some mosfets which eliminate the need for RTS.
-
-
-References:
--------------
-
-Unfortunately the Dynamixel references below are **not written well** (many typos
-and errors throughout), so please be careful or you will exhibit much frustration.
-Also they have disappeared, so if you get a ``404`` error, hopefully they
-will come back.
-
-- `XL-320 e-Manual <http://support.robotis.com/en/techsupport_eng.htm#product/actuator/dynamixel_x/xl_series/xl-320.htm>`_
-- `XL-320 hardware and half duplex circuit <http://support.robotis.com/en/product/actuator/dynamixel_x/xl-series_main.htm>`_
-- `Dynamixel Protocol Ver. 2 <http://support.robotis.com/en/product/actuator/dynamixel_pro/communication/instruction_status_packet.htm>`_
-- `PySerial <http://pyserial.readthedocs.io/en/latest/index.html>`_
-
-ToDo
------
-
-- bulk read
-- sync read
-
 Change Log
 -------------
 
 ========== ======= =============================
+2017-03-26 0.8.0   major overhaul of interface
 2017-03-19 0.7.7   can switch between GPIO pin and pyserial.setRTS() and sync write
 2017-02-20 0.7.6   small fixes and added servo_reboot
 2017-01-16 0.7.5   fixes some small errors
@@ -225,8 +142,8 @@ Change Log
 2016-08-16 0.0.1   init
 ========== ======= =============================
 
-License
-----------
+Software License
+------------------------
 
 **The MIT License (MIT)**
 
