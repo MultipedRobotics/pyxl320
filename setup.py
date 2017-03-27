@@ -61,11 +61,6 @@ setup(
 	keywords='dynamixel xl320 xl-320 servo actuator library robotics spider',
 	packages=['pyxl320'],
 	install_requires=['pyserial', 'simplejson'],
-	# setup_requires=[
-	# 	'nose',
-	# 	# 'coverage',
-	# 	# 'mock'
-	# ],
 	cmdclass={
 		'test': NoseTestCommand,
 		'publish': PublishCommand,
@@ -79,10 +74,5 @@ setup(
 		'bin/set_baud_rate.py',
 		'bin/servo_reboot.py',
 		'bin/servo_reset.py'
-	],
-	# entry_points={
-	# 	'console_scripts': [
-	# 		# 'pyarchey=pyarchey.pyarchey:main',
-	# 	],
-	# },
+	]
 )

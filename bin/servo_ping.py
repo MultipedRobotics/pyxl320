@@ -37,7 +37,7 @@ def sweep(port, rate, ID, retry=3):
 
 	# as more servos add up, I might need to increase the cnt number???
 	for cnt in range(retry):
-		ans = s.readPkts()
+		ans = s.read()
 
 		if ans:
 			for pkt in ans:
@@ -58,7 +58,6 @@ def handleArgs():
 	parser.add_argument('-r', '--rate', help='servo baud rate', type=int, default=1000000)
 	parser.add_argument('-i', '--id', help='ping servo ID', type=int, default=-1)
 	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/serial0')
-	# parser.add_argument('-g', '--gpio', help='Raspberry Pi GPIO pin number', type=int, default=17)
 
 	args = vars(parser.parse_args())
 	return args
@@ -67,4 +66,4 @@ def handleArgs():
 if __name__ == '__main__':
 	args = handleArgs()
 	print('Finding all servos:')
-	sweep(args['port'], args['rate'], args['id'])
+	sweep(port=args['port'], rate=args['rate'], ID=args['id'])

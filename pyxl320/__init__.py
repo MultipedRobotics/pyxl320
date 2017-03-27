@@ -6,7 +6,8 @@ __license__ = 'MIT'
 __author__ = 'Kevin J. Walchko'
 
 import Packet
-from ServoSerial import ServoSerial, DummySerial
+from ServoSerial import ServoSerial
+from DummySerial import DummySerial
 import utils
+from utils import listSerialPorts
 import xl320
-

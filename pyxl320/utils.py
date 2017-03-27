@@ -7,7 +7,26 @@
 ##############################################
 
 import simplejson as json
+import commands
 
+
+def listSerialPorts():
+	"""
+	http://pyserial.readthedocs.io/en/latest/shortintro.html
+
+	This calls the command line tool from pyserial to list the available
+	serial ports.
+	"""
+	cmd = 'python -m serial.tools.list_ports'
+	err, ret = commands.getstatusoutput(cmd)
+	if not err:
+		r = ret.split('\n')
+		ret = []
+		for line in r:
+			if line.find('/dev/') >= 0:
+				line = line.replace(' ', '')
+				ret.append(line)
+	return err, ret
 
 def hex_decode(data):
 	"""

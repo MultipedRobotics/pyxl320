@@ -5,7 +5,6 @@ from __future__ import division
 from pyxl320.Packet import makeSyncAnglePacket
 from pyxl320 import ServoSerial
 from pyxl320 import DummySerial
-# import sys
 import argparse
 
 
@@ -22,16 +21,6 @@ def handleArgs():
 args = handleArgs()
 port = args['port']
 angle = args['angle']
-
-# if len(sys.argv) != 2:
-# 	print(sys.argv[0], 'needs an angle (degrees): sync.py 200')
-# 	exit()
-
-# angle = float(sys.argv[1])
-
-# port = '/dev/serial0'
-# port = None
-# port = '/dev/tty.usbserial-A700h2xE'
 
 if port:
 	print('Opening: {}'.format(port))

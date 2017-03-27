@@ -10,51 +10,7 @@
 from __future__ import division, print_function
 import serial as PySerial
 import Packet
-import commands
 import time
-import platform
-import os
-
-
-class DummySerial(object):
-	"""
-	A dummy interface to test with when not hooked up to real hardware. It does
-	a decent job of mimicing the real thing.
-	"""
-	def __init__(self, port, printAll=False):
-		self.port = port
-		self.printAll = printAll
-
-	@staticmethod
-	def listSerialPorts():
-		return ServoSerial.listSerialPorts()
-
-	def open(self):
-		pass
-
-	def setRTS(self):
-		pass
-
-	def sendPkt(self, pkt):
-		# print('serial write >>', pkt)
-		return 0, None
-
-	def readPkts(self, how_much=128):
-		return [[0xFF, 0xFF, 0xFD, 0x00, 0x01, 0x04, 0x00, 0x55, 0x00, 0xA1, 0x0C], [0xFF, 0xFF, 0xFD, 0x00, 0x03, 0x04, 0x00, 0x55, 0x00, 0xA1, 0x0C]]
-
-	def read(self, how_much=128):
-		return [0xFF, 0xFF, 0xFD, 0x00, 0x01, 0x04, 0x00, 0x55, 0x00, 0xA1, 0x0C]
-
-	def write(self, data):
-		# if self.printAll:
-		# print('serial write >>', data)
-		return len(data)
-
-	def close(self):
-		pass
-
-	def flushInput(self):
-		pass
 
 
 class ServoSerial(object):
@@ -95,58 +51,18 @@ class ServoSerial(object):
 		self.serial.baudrate = baud_rate
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
-		# self.serial.timeout = 0.0001  # time out waiting for blocking read()
-		self.serial.timeout = 0.0001
-
-		if rts_hw:
-			# checking to make sure this is linux AND not travis.ci
-			if platform.system().lower() == 'linux' and 'CI' not in os.environ:
-				import RPi.GPIO as GPIO
-			else:
-				from fakeHW import GPIO
-
-			GPIO.setmode(GPIO.BCM)
-			GPIO.setup(rts_hw, GPIO.OUT)
-			self.gpio = GPIO
-			self.rts_hw = rts_hw
-		else:
-			self.rts_hw = 0
+		self.serial.timeout = 0.0001  # time out waiting for blocking read()
+		# self.serial.timeout = 0.0001
 
 	def __del__(self):
 		"""
 		Destructor: closes the serial port
 		"""
 		self.close()
-		if self.rts_hw:
-			self.gpio.cleanup()
 
 	def setRTS(self, level):
 		time.sleep(self.SLEEP_TIME)
-# 		PySerial.time.sleep(self.SLEEP_TIME)
-
-		if self.rts_hw:
-			self.gpio.output(self.rts_hw, level)
-		else:
-			self.serial.setRTS(not level)
-
-	@staticmethod
-	def listSerialPorts():
-		"""
-		http://pyserial.readthedocs.io/en/latest/shortintro.html
-
-		This calls the command line tool from pyserial to list the available
-		serial ports.
-		"""
-		cmd = 'python -m serial.tools.list_ports'
-		err, ret = commands.getstatusoutput(cmd)
-		if not err:
-			r = ret.split('\n')
-			ret = []
-			for line in r:
-				if line.find('/dev/') >= 0:
-					line = line.replace(' ', '')
-					ret.append(line)
-		return err, ret
+		self.serial.setRTS(not level)
 
 	def open(self):
 		if self.serial.isOpen():
@@ -176,18 +92,8 @@ class ServoSerial(object):
 		packets of info. If there is more than one packet, this returns an
 		array of valid packets.
 		"""
-		ret = self.readPkts(how_much)
-		return ret
-
-	def readPkts(self, how_much=128):  # FIXME: 128 might be too much ... what is largest?
-		"""
-		This toggles the RTS pin and reads in data. It also converts the buffer
-		back into a list of bytes and searches through the list to find valid
-		packets of info. If there is more than one packet, this returns an
-		array of valid packets.
-
-		going to remove this one
-		"""
+		# ret = self.readPkts(how_much)
+		# return ret
 		ret = []
 		self.setRTS(self.DD_READ)
 		data = self.serial.read(how_much)
@@ -198,6 +104,26 @@ class ServoSerial(object):
 			ret = Packet.findPkt(data)
 			# print('ret', ret)
 		return ret
+
+	# def readPkts(self, how_much=128):  # FIXME: 128 might be too much ... what is largest?
+	# 	"""
+	# 	This toggles the RTS pin and reads in data. It also converts the buffer
+	# 	back into a list of bytes and searches through the list to find valid
+	# 	packets of info. If there is more than one packet, this returns an
+	# 	array of valid packets.
+	#
+	# 	going to remove this one
+	# 	"""
+	# 	ret = []
+	# 	self.setRTS(self.DD_READ)
+	# 	data = self.serial.read(how_much)
+	# 	# print('readPkts data', data)
+	# 	if data:
+	# 		data = self.decode(data)
+	# 		# print('decode', data)
+	# 		ret = Packet.findPkt(data)
+	# 		# print('ret', ret)
+	# 	return ret
 
 	def write(self, pkt):
 		"""

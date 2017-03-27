@@ -101,7 +101,7 @@ def main():
 	pkt = Packet.makePingPacket(xl320.XL320_BROADCAST_ADDR)
 	ser.write(pkt)
 	for cnt in range(3):
-		ans = ser.readPkts()
+		ans = ser.read()
 
 		if ans:
 			for pkt in ans:
