@@ -105,7 +105,8 @@ converter:
 		raise Exception('servo error: {}'.format(err_str)
 
 	pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_GREEN)
-	serial.sendPkt(pkt)
+	ret = serial.sendPkt(pkt)
+	print('Status packet:', ret)
 
 The same thing, but now use the built in RPi serial port and use pin 17 to toggle
 Tx/Rx:
@@ -125,7 +126,8 @@ Tx/Rx:
 		raise Exception('servo error: {}'.format(err_str)
 
 	pkt = packet.makeLEDPacket(1, pyxl320.XL320_LED_GREEN)
-	serial.sendPkt(pkt)
+	ret = serial.sendPkt(pkt)
+	print('Status packet:', ret)
 
 Although I have made some packet creators (like LED and Servo), you can make
 your own using the basic ``makeWritePacket`` and ``makeReadPacket``.
@@ -170,17 +172,24 @@ Hardware
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/xl320_2.png
 	:align: center
 
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/circuit-old.png
+	:align: center
+
+The above is the suggested circuit to talk with the servos, but there are others.
+
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/circuit.png
 	:align: center
 
 I have used the `74LS241 <http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html>`_
-to talk to the xl-320.
+to talk to the xl-320. It works, but requires an extra pin, I use the RTS pin
+of the serial port to toggle direction.
 
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/docs/pics/my_test.jpg
 	:align: center
 
 Now the `Poppy project <https://github.com/poppy-project/pixl>`_ does it a little
-different and simpler ... I haven't tried it yet. The schematic is in my docs folder.
+different and simpler and is what I am using now. It simplifies the design by
+adding some mosfets which eliminate the need for RTS.
 
 
 References:

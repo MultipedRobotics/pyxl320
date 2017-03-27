@@ -1,4 +1,4 @@
-#!/usr/bin/env
+#!/usr/bin/env python
 
 ##############################################
 # The MIT License (MIT)
@@ -8,12 +8,15 @@
 # ----------------------------
 # Simple tool to change the id number of a servo
 #
+# I believe I am doing this correct, but it doesn't work
 
 from __future__ import print_function, division
 from pyxl320 import ServoSerial
 from pyxl320 import Packet
 from pyxl320 import xl320
 from pyxl320 import DummySerial
+from pyxl320 import utils
+from time import sleep
 import argparse
 
 
@@ -24,21 +27,26 @@ def handleArgs():
 	parser.add_argument('-l', '--level', help='reset level: 0-reset all, 1-reset all but ID, 2-reset all but ID and baud rate', type=int, default=2)
 	# parser.add_argument('-c', '--current_id', help='current id', type=int, default=1)
 	parser.add_argument('-p', '--port', help='serial port or \'dummy\' for testing, default is \'/dev/serial0\'', type=str, default='/dev/serial0')
+	parser.add_argument('-y', '--yes', help='answer "yes" to prompt and force reset', action='store_true')
 
 	args = vars(parser.parse_args())
 	return args
 
 
 def main():
+	print('<<<< PyXL320 Servo Reset >>>>')
 	args = handleArgs()
 
-	print('<<<<<<<<<< WARNING >>>>>>>>>>>>>')
-	print(' You are about to reset your servo(s)')
-	while True:
-		ans = raw_input(' Continue [y/n] >> ')
-		if ans == 'y': break
-		if ans == 'n': exit()
-		print('please type "y" or "n"')
+	if args['yes']:
+		pass
+	else:
+		print('<<<<<<<<<< WARNING >>>>>>>>>>>>>')
+		print(' You are about to reset your servo(s)')
+		while True:
+			ans = raw_input(' Continue [y/n] >> ')
+			if ans == 'y': break
+			if ans == 'n': exit()
+			print('please type "y" or "n"')
 
 	port = args['port']
 
@@ -64,15 +72,46 @@ def main():
 		ser = ServoSerial(port)
 	ser.open()
 
-	print('Resetting servo[{}] to {} on port {}'.format(ID, level, port))
-
 	pkt = Packet.makeResetPacket(ID, level)
 
-	err, err_str = ser.sendPkt(pkt)
-	if err:
-		print('Error: {} {}'.format(err, err_str))
+	if args['all']:
+		servo_str = 'all servos'
 	else:
-		print('Your servo is reset')
+		servo_str = 'servo ID {}'.format(args['id'])
+
+	if level == xl320.XL320_RESET_ALL:
+		level_str = 'all parameters'
+	elif level == xl320.XL320_RESET_ALL_BUT_ID:
+		level_str = 'all parameters but ID'
+	elif level == xl320.XL320_RESET_ALL_BUT_ID_BAUD_RATE:
+		level_str = 'all parameters but ID and baudrate'
+
+	print('\nResetting {}: {} set to default'.format(servo_str, level_str))
+	ser.write(pkt)
+	# print('packet', pkt)
+	sleep(1)
+
+	# do a reboot -----------------------------------------------------------
+	pkt = Packet.makeRebootPacket(ID)
+	ser.write(pkt)
+	print('\nYour servo(s) should be reset now')
+	sleep(1)
+
+	# maybe include smarter logic than just spamming every servo ------------
+	pkt = Packet.makePingPacket(xl320.XL320_BROADCAST_ADDR)
+	ser.write(pkt)
+	for cnt in range(3):
+		ans = ser.readPkts()
+
+		if ans:
+			for pkt in ans:
+				servo = Packet.packetToDict(pkt)
+				utils.prettyPrintPacket(servo)
+				print('raw pkt: {}'.format(pkt))
+		else:
+			print('Try {}: no servos found'.format(cnt))
+
+		sleep(0.1)
 
 
 if __name__ == '__main__':

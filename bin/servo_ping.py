@@ -17,7 +17,7 @@ import time
 from pyxl320 import xl320
 
 
-def sweep(port, rate, retry=3):
+def sweep(port, rate, ID, retry=3):
 	"""
 	Sends a ping packet to ID's from 0 to maximum and prints out any returned
 	messages.
@@ -27,13 +27,16 @@ def sweep(port, rate, retry=3):
 	s = ServoSerial(port, rate)
 	# s = DummySerial(port, rate)
 
+	if ID < 0:
+		ID = xl320.XL320_BROADCAST_ADDR
+
 	s.open()
-	pkt = makePingPacket(xl320.XL320_BROADCAST_ADDR)
+	pkt = makePingPacket(ID)
+	print('ping', pkt)
 	s.write(pkt)
 
 	# as more servos add up, I might need to increase the cnt number???
-	cnt = retry
-	while cnt:
+	for cnt in range(retry):
 		ans = s.readPkts()
 
 		if ans:
@@ -42,10 +45,9 @@ def sweep(port, rate, retry=3):
 				utils.prettyPrintPacket(servo)
 				print('raw pkt: {}'.format(pkt))
 		else:
-			print('cnt {} not found'.format(cnt))
+			print('Try {}: no servos found'.format(cnt))
 
-		cnt -= 1
-		time.sleep(0.01)
+		time.sleep(0.1)
 
 	s.close()
 
@@ -54,7 +56,9 @@ def handleArgs():
 	parser = argparse.ArgumentParser(description='ping servos')
 	# parser.add_argument('-m', '--max', help='max id', type=int, default=253)
 	parser.add_argument('-r', '--rate', help='servo baud rate', type=int, default=1000000)
+	parser.add_argument('-i', '--id', help='ping servo ID', type=int, default=-1)
 	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/serial0')
+	# parser.add_argument('-g', '--gpio', help='Raspberry Pi GPIO pin number', type=int, default=17)
 
 	args = vars(parser.parse_args())
 	return args
@@ -63,4 +67,4 @@ def handleArgs():
 if __name__ == '__main__':
 	args = handleArgs()
 	print('Finding all servos:')
-	sweep(args['port'], args['rate'])
+	sweep(args['port'], args['rate'], args['id'])

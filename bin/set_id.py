@@ -56,6 +56,7 @@ def main():
 	ser.open()
 
 	pkt = makeServoIDPacket(curr_id, new_id)
+	print('pkt', pkt)
 
 	err, err_str = ser.sendPkt(pkt)
 	if err:

@@ -1,9 +1,11 @@
 #!/usr/bin/env python
+
 ##############################################
 # The MIT License (MIT)
 # Copyright (c) 2016 Kevin Walchko
 # see LICENSE for full details
 ##############################################
+# Serial interfaces (real and test) for communications with XL-320 servos.
 
 from __future__ import division, print_function
 import serial as PySerial
@@ -12,37 +14,6 @@ import commands
 import time
 import platform
 import os
-
-
-# checking to make sure this is linux AND not travis.ci
-# if platform.system().lower() == 'linux' and 'CI' not in os.environ:
-# 	import RPi.GPIO as GPIO
-# else:
-# 	# import random
-# 	print('WARNING: using fake RPi.GPIO')
-#
-# 	class GPIO(object):
-# 		IN = True
-# 		OUT = False
-# 		BCM = True
-# 		def __init__(self): print('dummy GPIO')
-# 		@staticmethod
-# 		def setwarnings(a): pass
-# 		@staticmethod
-# 		def setmode(a): pass
-# 		@staticmethod
-# 		def setup(a, b): pass
-# 		@staticmethod
-# 		def input(a): return 1
-# 		@staticmethod
-# 		def cleanup(): pass
-# 		@staticmethod
-# 		def output(a, b): pass
-
-
-"""
-Serial interfaces (real and test) for communications with XL-320 servos.
-"""
 
 
 class DummySerial(object):
@@ -106,8 +77,11 @@ class ServoSerial(object):
 # 	DD_READ = True        # data direction set to read .. RTS is backwards
 	DD_WRITE = True      # data direction set to write
 	DD_READ = False        # data direction set to read
+	# SLEEP_TIME = 0.0    # sleep time between read/write
+	# SLEEP_TIME = 0.005    # sleep time between read/write
 	# SLEEP_TIME = 0.0005    # sleep time between read/write
-	SLEEP_TIME = 0.0005    # sleep time between read/write
+	SLEEP_TIME = 0.00005    # sleep time between read/write
+	# SLEEP_TIME = 0.000005    # sleep time between read/write
 
 	def __init__(self, port, baud_rate=1000000, rts_hw=0):
 		"""
@@ -121,7 +95,8 @@ class ServoSerial(object):
 		self.serial.baudrate = baud_rate
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
-		self.serial.timeout = 0.0001  # time out waiting for blocking read()
+		# self.serial.timeout = 0.0001  # time out waiting for blocking read()
+		self.serial.timeout = 0.0001
 
 		if rts_hw:
 			# checking to make sure this is linux AND not travis.ci
@@ -142,7 +117,8 @@ class ServoSerial(object):
 		Destructor: closes the serial port
 		"""
 		self.close()
-		self.gpio.cleanup()
+		if self.rts_hw:
+			self.gpio.cleanup()
 
 	def setRTS(self, level):
 		time.sleep(self.SLEEP_TIME)
@@ -197,17 +173,11 @@ class ServoSerial(object):
 		"""
 		This toggles the RTS pin and reads in data. It also converts the buffer
 		back into a list of bytes and searches through the list to find valid
-		packets of info. This only returns the first packet in the buffer.
+		packets of info. If there is more than one packet, this returns an
+		array of valid packets.
 		"""
-		self.setRTS(self.DD_READ)
-		data = self.serial.read(how_much)
-		data = self.decode(data)
-		# return data
-		ret = []
-		d = Packet.findPkt(data)
-		if len(d) > 0:  # FIXME: need a better way
-			ret = d[0]  # should i take the last one ... most recent?
-		return ret  # what do i do if i find more?
+		ret = self.readPkts(how_much)
+		return ret
 
 	def readPkts(self, how_much=128):  # FIXME: 128 might be too much ... what is largest?
 		"""
@@ -215,12 +185,18 @@ class ServoSerial(object):
 		back into a list of bytes and searches through the list to find valid
 		packets of info. If there is more than one packet, this returns an
 		array of valid packets.
+
+		going to remove this one
 		"""
+		ret = []
 		self.setRTS(self.DD_READ)
 		data = self.serial.read(how_much)
-		data = self.decode(data)
-		# return data
-		ret = Packet.findPkt(data)
+		# print('readPkts data', data)
+		if data:
+			data = self.decode(data)
+			# print('decode', data)
+			ret = Packet.findPkt(data)
+			# print('ret', ret)
 		return ret
 
 	def write(self, pkt):
@@ -233,15 +209,11 @@ class ServoSerial(object):
 		pkt = bytearray(pkt)
 		pkt = bytes(pkt)
 
-		# num = self.serial.write(pkt)
-		# self.read()
 		num = self.serial.write(pkt)
-		print('wrote {} of len(pkt) = {}'.format(num, len(pkt)))
-		# self.serial.flushOutput()  # flush anything in the buffer
-		self.read()
+		# print('wrote {} of len(pkt) = {}'.format(num, len(pkt)))
 		return num
 
-	def sendPkt(self, pkt, cnt=5):
+	def sendPkt(self, pkt, retry=5, sleep_time=0.01):
 		"""
 		Sends a packet and waits for a return. If no return is given, then it
 		resends the packet. If an error occurs, it also resends the packet.
@@ -250,29 +222,22 @@ class ServoSerial(object):
 			pkt - command packet to send to servo
 			cnt - how many retries should this do? default = 5
 		out:
-			err_num - 0 if good, >0 if error
-			err_str - None if good, otherwise a string
+			array of packets
 		"""
-		err_num = 0
-		err_str = None
-		while (cnt > 0):  # changed this so it is no longer infinite retry
-			# print('going write')
+		for cnt in range(retry):
 			self.write(pkt)  # send packet to servo
-			ans = self.read()  # get return status packet
+			ans = self.readPkts()  # get return status packet
+			# print('sendPkt ans', ans)
+
 			if ans:
-				# print('ans', ans)
-				cnt = 0
-				err_num, err_str = Packet.getErrorString(ans)
-				if err_num:  # something went wrong, exit function
-					print('Error[{}]: {}'.format(err_num, err_str))
-					cnt = 0
-				# else:
-				# 	print('packet {}'.format(ans))
+				# check for error and resend
+				return ans
+
 			else:
-				cnt -= 1
-				err_num = 0x01
 				print('>> retry {} <<'.format(cnt))
-		return err_num, err_str
+				time.sleep(sleep_time)
+
+		return []
 
 	def close(self):
 		"""

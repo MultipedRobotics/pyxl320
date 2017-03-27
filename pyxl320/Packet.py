@@ -173,7 +173,8 @@ def makeResetPacket(ID, param):
 	"""
 	if param not in [0x01, 0x02, 0xff]:
 		raise Exception('Packet.makeResetPacket invalide parameter {}'.format(param))
-	pkt = makePacket(ID, xl320.XL320_RESET, None, [param])
+	# pkt = makePacket(ID, xl320.XL320_RESET, None, [param])
+	pkt = makePacket(ID, xl320.XL320_RESET, None, [1])
 	return pkt
 
 
@@ -408,30 +409,34 @@ def findPkt(pkt):
 	in: buffer to search through
 	out: a list of valid data packet
 	"""
-	# for i in range(len(pkt)):
+	# print('findpkt', pkt)
+	# print('-----------------------')
 	ret = []
-	while len(pkt)-11 >= 0:
+	while len(pkt)-10 >= 0:
 		if pkt[0:4] != [0xFF, 0xFF, 0xFD, 0x00]:
 			pkt.pop(0)  # get rid of the first index
-			# print('pop')
+			# print(' - pop:', pkt)
 			continue
-		# pcrc = pkt[-2:]  # get crc from packet
-		# crc = crc16(pkt[:-2])  # calculate crc from packet
+		# print(' > good packet')
 		length = (pkt[6] << 8) + pkt[5]
-		# print('length', length)
+		# print(' > length', length)
 		crc_pos = 5 + length
-		# pkt_crc = [pkt[crc_pos], pkt[crc_pos+1]]
 		pkt_crc = pkt[crc_pos:crc_pos + 2]
-		# print(pkt_crc)
 		crc = le(crc16(pkt[:crc_pos]))
-		# print(crc)
-		# print('pkt {}'.format(pkt[:crc_pos]))
+		# print(' > calc crc', crc)
+		# print(' > pkt crc', pkt_crc)
 		if pkt_crc == crc:
 			pkt_end = crc_pos+2
 			ret.append(pkt[:pkt_end])
+			# print(' > found:', pkt[:pkt_end])
+			# print(' > pkt size', pkt_end)
 			del pkt[:pkt_end]
+			# print(' > remaining:', pkt)
 		else:
-			del pkt[:11]
+			pkt_end = crc_pos+2
+			# print(' - crap:', pkt[:pkt_end])
+			del pkt[:pkt_end]
+	# print('findpkt ret:', ret)
 	return ret
 
 

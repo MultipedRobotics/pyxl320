@@ -8,6 +8,8 @@
 # Tests for continous integration
 
 from pyxl320.Packet import le, crc16, findPkt, getPacketType, getErrorString
+from pyxl320 import Packet
+from pyxl320 import xl320
 
 # http://forums.trossenrobotics.com/showthread.php?7489-Hard-Can-anyone-give-me-a-sample-packet-by-running-function-quot-Reading-Current-Position-quot-for-Dynamixel-Pro-Motors
 # [0xFF, 0xFF, 0xFD, 0x00, ID, LEN_L, LEN_H, INST, PARAM 1, PARAM 2, ..., PARAM N, CRC_L, CRC_H]
@@ -56,6 +58,42 @@ def test_find_pkts():
 	err = [0, 1, 4, 0, 85, 0, 161, 12, 0, 4, 0, 255, 255, 253]
 	pkts = findPkt(err)
 	assert len(pkts) == 0
+
+
+def packet_check(a, b):
+	assert len(a) == len(b)
+	for aa, bb in zip(a, b):
+		assert aa == bb
+
+
+def test_reset_packet():
+	ans = [255, 255, 253, 0, 1, 4, 0, 6, 1, 161, 230]
+	pkt = Packet.makeResetPacket(1, xl320.XL320_RESET_ALL_BUT_ID)
+	packet_check(ans, pkt)
+
+
+def test_ping_packet():
+	ans = [255, 255, 253, 0, 254, 3, 0, 1, 49, 66]
+	pkt = Packet.makePingPacket(xl320.XL320_BROADCAST_ADDR)
+	packet_check(ans, pkt)
+
+
+def test_reboot_packet():
+	ans = [255, 255, 253, 0, 1, 3, 0, 8, 47, 78]
+	pkt = pkt = Packet.makeRebootPacket(1)
+	packet_check(ans, pkt)
+
+
+def test_angle_packet():
+	ans = [255, 255, 253, 0, 1, 7, 0, 3, 30, 0, 139, 1, 83, 255]
+	pkt = Packet.makeServoPacket(1, 116)
+	packet_check(ans, pkt)
+
+
+def test_led_packet():
+	ans = [255, 255, 253, 0, 1, 6, 0, 3, 25, 0, 1, 47, 98]
+	pkt = Packet.makeLEDPacket(1, xl320.XL320_LED_RED)
+	packet_check(ans, pkt)
 
 
 if __name__ == "__main__":

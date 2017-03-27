@@ -44,6 +44,7 @@ def main():
 	ser.open()
 
 	pkt = Packet.makeRebootPacket(ID)
+	# print('pkt', pkt)
 
 	ser.write(pkt)
 	gramar = 'is'
