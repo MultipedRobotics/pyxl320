@@ -1,8 +1,14 @@
 # Hardware Interface
 
+![](../pics/my_test.jpg)
+
 The xl-320 servos use a half duplex, single master, multi-slave
 serial interface between all of the servos. There are multiple designs on the interweb
 you can build (or buy) to connect a computer or microcontroller to the servos.
+
+![](../../pics/servo_angles.png)
+
+![](../../pics/xl320_2.png)
 
 ## Robotis Suggested
 
@@ -12,6 +18,14 @@ This uses a 74HC126 tri state buffer to interconnect the data line with a standa
 To switch betwen the Tx and Rx signals, a third signal (direction port) is used. In my
 software, I use the `pyserial` RTS signal for the direction signal. **Unfortunately, 
 not all USB serial interfaces breakout the RTS pin**
+
+## 74LS241 Interface
+
+![](../../pics/circuit.png)
+
+I have used the [74LS241](http://savageelectronics.blogspot.com/2011/01/arduino-y-dynamixel-ax-12.html)
+to talk to the xl-320. This has a higher pin count, but the NOT is included in the chip. It works, but 
+requires the extra RTS pin of the serial port to toggle direction.
 
 ## Pixl
 
