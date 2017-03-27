@@ -1,6 +1,6 @@
 # Index
 
-- Software
+- [Software](software.md)
 - [Hardware Interface](interface.md)
 
 ---
