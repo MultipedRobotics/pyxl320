@@ -7,7 +7,7 @@
 ##############################################
 # Tests for continous integration
 
-from pyxl320.Packet import le, crc16, findPkt, getPacketType, getErrorString
+from pyxl320.Packet import le, crc16, findPkt, getPacketType
 from pyxl320 import Packet
 from pyxl320 import xl320
 
@@ -38,9 +38,9 @@ from pyxl320 import xl320
 def test_error_packet():
 	pkt = [255, 255, 253, 0, 1, 4, 0, 85, 0, 161, 12]
 	assert getPacketType(pkt) == 0x55
-	pkt = [255, 255, 253, 0, 1, 4, 0, 85, 128, 162, 143]
-	err_num, err_str = getErrorString(pkt)
-	assert err_num == 128  # this isn't right, but i don't understand it
+	# pkt = [255, 255, 253, 0, 1, 4, 0, 85, 128, 162, 143]
+	# err_num, err_str = getErrorString(pkt)
+	# assert err_num == 128  # this isn't right, but i don't understand it
 
 
 def test_crc16():
@@ -59,6 +59,8 @@ def test_find_pkts():
 	pkts = findPkt(err)
 	assert len(pkts) == 0
 
+
+# these compare built packages to correct packages
 
 def packet_check(a, b):
 	assert len(a) == len(b)

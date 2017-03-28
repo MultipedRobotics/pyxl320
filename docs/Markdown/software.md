@@ -13,13 +13,13 @@ Packet format:
 
 [0xFF, 0xFF, 0xFD, 0x00, ID, LEN_L, LEN_H, INST, PARAM 1, PARAM 2, ..., PARAM N, CRC_L, CRC_H]
 
-Header: 0xFF, 0xFF, 0xFD
-Reserved byte: 0x00
-Servo ID: ID
-Packet Length: Len_l, len_h
-Instruction: INST
-Parameters: Param 1 ... Param N
-CRC: crc_l, crc_h
+- Header: 0xFF, 0xFF, 0xFD
+- Reserved byte: 0x00
+- Servo ID: ID
+- Packet Length: Len_l, len_h
+- Instruction: INST
+- Parameters: Param 1 ... Param N
+- CRC: crc_l, crc_h
 
 A status packet back from the servo follows the same format, but the instruction
 is always `0x55` and maybe followed by error codes if something is wrong.

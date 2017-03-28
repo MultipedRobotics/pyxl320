@@ -14,6 +14,7 @@ ignore-paths:
     - pics
     - test
     - pyxl320/__init__.py
+    - pyxl320/DummySerial.py
 
 python-targets:
     - 2

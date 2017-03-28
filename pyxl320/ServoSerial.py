@@ -7,7 +7,8 @@
 ##############################################
 # Serial interfaces (real and test) for communications with XL-320 servos.
 
-from __future__ import division, print_function
+from __future__ import division
+from __future__ import print_function
 import serial as PySerial
 import Packet
 import time
@@ -152,7 +153,7 @@ class ServoSerial(object):
 		"""
 		for cnt in range(retry):
 			self.write(pkt)  # send packet to servo
-			ans = self.readPkts()  # get return status packet
+			ans = self.read()  # get return status packet
 			# print('sendPkt ans', ans)
 
 			if ans:

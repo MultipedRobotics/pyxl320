@@ -106,11 +106,24 @@ Moving = {
 }
 
 ErrorMsg = {
-	-1: 'Not a status packet',
 	0: None,
 	1: 'ERROR_OVERLOAD',
 	2: 'ERROR_OVER_HEATING',
 	4: 'ERROR_INPUT_VOLTAGE'
+}
+
+# I don't trust these error number, I bet the documentation is wrong
+ErrorStatusMsg = {
+	-1: 'Not a status packet',
+	0: None,
+	1: 'ERROR_RAIL_FAIL',
+	2: 'ERROR_INTRUCTION',
+	3: 'ERROR_CRC',
+	4: 'ERROR_DATA_RANGE',
+	5: 'ERROR_DATA_LENGTH',
+	6: 'ERROR_DATA_LIMIT',
+	7: 'ERROR_ACCEESS',
+	128: 'ALERT'
 }
 
 InstrToStr = {

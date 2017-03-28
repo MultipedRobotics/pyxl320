@@ -413,7 +413,7 @@ def getErrorString(pkt):
 	Decodes a status packet to a string.
 	"""
 	err = statusError(pkt)
-	return xl320.ErrorMsg[err]
+	return xl320.ErrorStatusMsg[err]
 
 
 def prettyPrintPacket(pkt):
