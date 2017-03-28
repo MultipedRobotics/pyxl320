@@ -93,6 +93,13 @@ def le(h):
 	return [h & 0xff, h >> 8]
 
 
+def word(l, h):
+	"""
+	Given a low and high bit, converts the number back into a word.
+	"""
+	return (h << 8) + l
+
+
 def angleToInt(angle):
 	"""
 	Converts an angle to an integer the servo understands
@@ -351,44 +358,62 @@ def getPacketType(pkt):
 	return pkt[7]
 
 
+# def getErrorString(pkt):
+# 	"""
+# 	not done - still in work, not sure I like this
+#
+# 	if error - return error_num, string
+# 	if not error - returns 0, None
+# 	"""
+# 	# bit 7 - alert
+# 	# bit 0-6 - error number 0-64
+# 	# err_str = {
+# 	# 	0: 'none',
+# 	# 	1: 'result fail',
+# 	# 	2: 'instruction error',
+# 	# 	4: 'crc error',
+# 	# 	8: 'data range error',
+# 	# 	16: 'data length error',
+# 	# 	32: '?',
+# 	# 	64: '?'
+# 	# }
+# # 	err_str = [
+# # 		'none',
+# # 		'result fail',
+# # 		'instruction error',
+# # 		'crc error',
+# # 		'data range error',
+# # 		'data length error',
+# # 		'?',
+# # 		'?'
+# # 	]
+# 	ret = None
+# 	err = 0
+#
+# 	if len(pkt) >= 11 and pkt[7] == xl320.XL320_STATUS:
+# 			# err = pkt[8] | 128  # remove alert bit
+# 			err = pkt[8]
+# 			# ret = err_str[err]
+# 			ret = 'error: {}'.format(err)
+# 	return err, ret
+
+
+def statusError(pkt):
+	"""
+	Grabs the status (int) from an error packet and returns it. It retuns -1
+	if the packet is not a status packet.
+	"""
+	if pkt[7] == 0x55:
+		return pkt[8]
+	return -1
+
+
 def getErrorString(pkt):
 	"""
-	not done - still in work, not sure I like this
-
-	if error - return error_num, string
-	if not error - returns 0, None
+	Decodes a status packet to a string.
 	"""
-	# bit 7 - alert
-	# bit 0-6 - error number 0-64
-	# err_str = {
-	# 	0: 'none',
-	# 	1: 'result fail',
-	# 	2: 'instruction error',
-	# 	4: 'crc error',
-	# 	8: 'data range error',
-	# 	16: 'data length error',
-	# 	32: '?',
-	# 	64: '?'
-	# }
-# 	err_str = [
-# 		'none',
-# 		'result fail',
-# 		'instruction error',
-# 		'crc error',
-# 		'data range error',
-# 		'data length error',
-# 		'?',
-# 		'?'
-# 	]
-	ret = None
-	err = 0
-
-	if len(pkt) >= 11 and pkt[7] == xl320.XL320_STATUS:
-			# err = pkt[8] | 128  # remove alert bit
-			err = pkt[8]
-			# ret = err_str[err]
-			ret = 'error: {}'.format(err)
-	return err, ret
+	err = statusError(pkt)
+	return xl320.ErrorMsg[err]
 
 
 def prettyPrintPacket(pkt):
@@ -442,23 +467,15 @@ def findPkt(pkt):
 
 def packetToDict(pkt):
 	"""
-	Given a packet, this turns it into a dictionary.
+	Given a packet, this turns it into a dictionary ... is this useful?
 
 	in: packet, array of numbers
 	out: dictionary (key, value)
 	"""
-	instrToStr = {
-		1: 'ping',
-		2: 'read',
-		3: 'write',
-		6: 'reset',
-		8: 'reboot',
-		85: 'status'
-	}
 
 	d = {
 		'id': pkt[4],
-		'instruction': instrToStr[pkt[7]],
+		'instruction': xl320.InstrToStr[pkt[7]],
 		'length': (pkt[6] << 8) + pkt[5],
 		'params': pkt[8:-2],
 		'crc': pkt[-2:]

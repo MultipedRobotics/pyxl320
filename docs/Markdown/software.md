@@ -9,13 +9,24 @@ of back and forth between the servo and the controlling computer.
 |------------------------|----|---------------|-------------|-------------------------------|-----|
 | [0xFF, 0xFF, 0xFD, 0x00] | ID | [LEN_L, LEN_H] | INST | [PARAM 1, PARAM 2, ..., PARAM N] | [CRC_L, CRC_H] |
 
+Packet format:
+
+[0xFF, 0xFF, 0xFD, 0x00, ID, LEN_L, LEN_H, INST, PARAM 1, PARAM 2, ..., PARAM N, CRC_L, CRC_H]
+
+Header: 0xFF, 0xFF, 0xFD
+Reserved byte: 0x00
+Servo ID: ID
+Packet Length: Len_l, len_h
+Instruction: INST
+Parameters: Param 1 ... Param N
+CRC: crc_l, crc_h
 
 A status packet back from the servo follows the same format, but the instruction
 is always `0x55` and maybe followed by error codes if something is wrong.
 The length of the packet is aways the entire length minus header, id, and crc.
 Also remember, the packets are little-endian, so place numbers in the packet
 as `[LSB, MSB]`. You can use the function `le()` in `Packet` to accomplish
-this.
+this. You can also use `word()` to reverse `le()`.
 
 See the references below for more details on the instructions, error codes, etc.
 

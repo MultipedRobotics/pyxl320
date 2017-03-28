@@ -10,7 +10,7 @@ import argparse
 
 
 def handleArgs():
-	parser = argparse.ArgumentParser(description='set servos to an angle using sync command')
+	parser = argparse.ArgumentParser(description='set servos to an angle using bulk command')
 	parser.add_argument('angle', help='servo angle', type=float, default=150.0)
 	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/serial0')
 	# parser.add_argument('-g', '--gpio', help='Raspberry Pi GPIO pin number', type=int, default=17)

@@ -68,3 +68,56 @@ XL320_9600                       = 0  # 0: 9600, 1:57600, 2:115200, 3:1Mbps
 XL320_57600                      = 1
 XL320_115200                     = 2
 XL320_1000000                    = 3
+
+# Conversions from values to strings for debugging
+
+Baudrates = {
+	0: '9.6 kbps',
+	1: '57.6 kbps',
+	2: '115 kbps',
+	3: '1 Mbps'
+}
+
+Modes = {
+	1: 'Wheel',
+	2: 'Joint'
+}
+
+ReturnTypes = {
+	0: 'No Return',
+	1: 'Only Read',
+	2: 'Return All'
+}
+
+LEDColors = {
+	0: 'Off',
+	1: 'Red',
+	2: 'Green',
+	3: 'Yellow',
+	4: 'Blue',
+	5: 'Pink',
+	6: 'Blue-Green',
+	7: 'White'
+}
+
+Moving = {
+	0: 'Completed',
+	1: 'Moving'
+}
+
+ErrorMsg = {
+	-1: 'Not a status packet',
+	0: None,
+	1: 'ERROR_OVERLOAD',
+	2: 'ERROR_OVER_HEATING',
+	4: 'ERROR_INPUT_VOLTAGE'
+}
+
+InstrToStr = {
+	1: 'Ping',
+	2: 'Read',
+	3: 'Write',
+	6: 'Reset',
+	8: 'Reboot',
+	85: 'Status'
+}
