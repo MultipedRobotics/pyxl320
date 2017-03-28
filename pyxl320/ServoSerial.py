@@ -40,7 +40,7 @@ class ServoSerial(object):
 	SLEEP_TIME = 0.00005    # sleep time between read/write
 	# SLEEP_TIME = 0.000005    # sleep time between read/write
 
-	def __init__(self, port, baud_rate=1000000, rts_hw=0):
+	def __init__(self, port, baud_rate=1000000):
 		"""
 		Constructor: sets up the serial port
 
