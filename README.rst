@@ -1,7 +1,7 @@
 pyXL320
 =========
 
-.. image:: https://github.com/walchko/pyxl320/blob/master/pics/complex.gif
+.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/complex.gif
     :align: center
     :target: https://github.com/walchko/pyxl320
     :alt: animated gif
