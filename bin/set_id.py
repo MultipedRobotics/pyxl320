@@ -13,6 +13,16 @@ from __future__ import print_function, division
 from pyxl320 import ServoSerial, Packet, xl320
 # from pyxl320 import DummySerial
 import argparse
+import sys
+PY3 = sys.version_info > (3,)
+
+
+def get_input(str):
+	"""Handle difference between py2 and py3"""
+	if PY3:
+		return input(str)
+	else:
+		return raw_input(str)
 
 
 def makeServoIDPacket(curr_id, new_id):
@@ -24,9 +34,9 @@ def makeServoIDPacket(curr_id, new_id):
 
 
 def makeInterActive():
-	port = raw_input('Enter serial port >> ')
-	curr_id = raw_input('Enter current id >> ')
-	new_id = raw_input('Enter new id >> ')
+	port = get_input('Enter serial port >> ')
+	curr_id = get_input('Enter current id >> ')
+	new_id = get_input('Enter new id >> ')
 	return port, curr_id, new_id
 
 

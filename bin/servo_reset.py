@@ -18,6 +18,16 @@ from pyxl320 import DummySerial
 from pyxl320 import utils
 from time import sleep
 import argparse
+import sys
+PY3 = sys.version_info > (3,)
+
+
+def get_input(str):
+	"""Handle difference between py2 and py3"""
+	if PY3:
+		return input(str)
+	else:
+		return raw_input(str)
 
 
 def handleArgs():
@@ -33,7 +43,7 @@ def handleArgs():
 	return args
 
 
-def main():
+if __name__ == '__main__':
 	print('<<<< PyXL320 Servo Reset >>>>')
 	args = handleArgs()
 
@@ -43,7 +53,7 @@ def main():
 		print('<<<<<<<<<< WARNING >>>>>>>>>>>>>')
 		print(' You are about to reset your servo(s)')
 		while True:
-			ans = raw_input(' Continue [y/n] >> ')
+			ans = get_input(' Continue [y/n] >> ')
 			if ans == 'y': break
 			if ans == 'n': exit()
 			print('please type "y" or "n"')
@@ -112,7 +122,3 @@ def main():
 			print('Try {}: no servos found'.format(cnt))
 
 		sleep(0.1)
-
-
-if __name__ == '__main__':
-	main()
