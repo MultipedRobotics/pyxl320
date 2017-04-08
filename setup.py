@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 ##############################################
 # The MIT License (MIT)
 # Copyright (c) 2016 Kevin Walchko
@@ -10,13 +11,22 @@ from setuptools import setup
 from pyxl320 import __version__ as VERSION
 import os
 from setuptools.command.test import test as TestCommand
+from setuptools.dist import Distribution
+
+
+class BinaryDistribution(Distribution):
+	def is_pure(self):
+		return False
 
 
 class PublishCommand(TestCommand):
 	def run_tests(self):
 		print('Publishing to PyPi ...')
-		os.system("python setup.py bdist_wheel")
-		os.system("twine upload dist/pyxl320-{}*.whl".format(VERSION))
+		# os.system("python2 setup.py sdist bdist_wheel")
+		# os.system("python2 setup.py sdist")
+		# os.system("python2 setup.py bdist_wheel")
+		os.system("python3 setup.py bdist_wheel")
+		# os.system("twine upload dist/pyxl320-{}*.whl".format(VERSION))
 
 
 setup(

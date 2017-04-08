@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 
 ##############################################
 # The MIT License (MIT)
@@ -10,7 +10,7 @@
 from __future__ import division
 from __future__ import print_function
 import serial as PySerial
-import Packet
+from . import Packet
 import time
 
 

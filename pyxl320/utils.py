@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 
 ##############################################
 # The MIT License (MIT)
@@ -7,7 +7,16 @@
 ##############################################
 
 import simplejson as json
-import commands
+from platform import python_version
+
+
+if python_version().split('.')[0] == '2':
+	import commands
+else:
+	import subprocess
+
+	def getoutput(cmd):
+		return subprocess.getoutput(cmd)
 
 
 def listSerialPorts():
@@ -27,6 +36,7 @@ def listSerialPorts():
 				line = line.replace(' ', '')
 				ret.append(line)
 	return err, ret
+
 
 def hex_decode(data):
 	"""

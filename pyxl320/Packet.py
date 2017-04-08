@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+
+
 ###############################################
 # The MIT License (MIT)
 # Copyright (c) 2016 Kevin Walchko
@@ -7,7 +8,7 @@
 
 from __future__ import division
 from __future__ import print_function
-import xl320
+from . import xl320
 
 """
 A bunch of packet constructors, file name follows make* and returns a complete
