@@ -10,3 +10,4 @@ build
 *.zip
 c/
 nogit
+__pychache__
