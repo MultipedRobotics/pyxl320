@@ -10,7 +10,7 @@
 from __future__ import print_function
 from pyxl320.Packet import makePingPacket, packetToDict
 from pyxl320 import ServoSerial
-# from pyxl320 import DummySerial
+from pyxl320 import DummySerial
 from pyxl320 import utils
 import argparse
 import time
@@ -24,8 +24,10 @@ def sweep(port, rate, ID, retry=3):
 
 	Actually send a broadcast and will retry (resend) the ping 3 times ...
 	"""
-	s = ServoSerial(port, rate)
-	# s = DummySerial(port, rate)
+	if port == 'dummy':
+		s = DummySerial(port, rate)
+	else:
+		s = ServoSerial(port, rate)
 
 	if ID < 0:
 		ID = xl320.XL320_BROADCAST_ADDR

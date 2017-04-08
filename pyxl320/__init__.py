@@ -1,6 +1,6 @@
 
 
-__version__ = '0.8.1'
+__version__ = '0.9.0'
 __copyright__ = 'Copyright (c) 2016 Kevin Walchko'
 __license__ = 'MIT'
 __author__ = 'Kevin J. Walchko'

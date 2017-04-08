@@ -30,6 +30,8 @@ version 2.0 of their protocol. The library is divided up as follows:
 	- **utils** - misc
 	- **xl320** - register/command/error definitions for Dynamixel's XL-320 servo
 
+**New:** pyXL320 now supports python2 and python3.
+
 Setup
 --------
 
@@ -69,7 +71,7 @@ Command              Description
 -------------------------------------------------------------------------------------
 
 The documents are stored in markdown files in the repo `here <https://github.com/walchko/pyxl320/tree/master/docs/Markdown>`_
-and cover hardware interface and software development. However, a simple example to turn the servo 
+and cover hardware interface and software development. However, a simple example to turn the servo
 and turn the LED to green using a USB serial converter:
 
 .. code-block:: python

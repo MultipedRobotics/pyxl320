@@ -22,11 +22,11 @@ class BinaryDistribution(Distribution):
 class PublishCommand(TestCommand):
 	def run_tests(self):
 		print('Publishing to PyPi ...')
-		# os.system("python2 setup.py sdist bdist_wheel")
+		os.system("python3 setup.py sdist")
 		# os.system("python2 setup.py sdist")
-		# os.system("python2 setup.py bdist_wheel")
+		os.system("python2 setup.py bdist_wheel")
 		os.system("python3 setup.py bdist_wheel")
-		# os.system("twine upload dist/pyxl320-{}*.whl".format(VERSION))
+		os.system("twine upload dist/pyxl320-{}*".format(VERSION))
 
 
 setup(
@@ -43,6 +43,7 @@ setup(
 		'License :: OSI Approved :: MIT License',
 		'Operating System :: OS Independent',
 		'Programming Language :: Python :: 2.7',
+		'Programming Language :: Python :: 3.6',
 		'Topic :: Software Development :: Libraries',
 		'Topic :: Software Development :: Libraries :: Python Modules',
 		'Topic :: Software Development :: Libraries :: Application Frameworks'

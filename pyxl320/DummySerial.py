@@ -8,7 +8,7 @@ class DummySerial(object):
 	A dummy interface to test with when not hooked up to real hardware. It does
 	a decent job of mimicing the real thing.
 	"""
-	def __init__(self, port):
+	def __init__(self, port=0, rate=0):
 		print('WARNING: Using fake ServoSerial')
 
 	def open(self):

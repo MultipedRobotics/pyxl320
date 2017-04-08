@@ -22,12 +22,12 @@ import sys
 PY3 = sys.version_info > (3,)
 
 
-def get_input(str):
+def get_input(s):
 	"""Handle difference between py2 and py3"""
 	if PY3:
-		return input(str)
+		return input(s)
 	else:
-		return raw_input(str)
+		return raw_input(s)
 
 
 def handleArgs():
