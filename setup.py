@@ -19,13 +19,35 @@ class BinaryDistribution(Distribution):
 		return False
 
 
-class PublishCommand(TestCommand):
+class BuildCommand(TestCommand):
+	"""Build binaries/packages"""
 	def run_tests(self):
-		print('Publishing to PyPi ...')
-		os.system("python3 setup.py sdist")
-		# os.system("python2 setup.py sdist")
+		print('Delete dist directory and clean up binary files')
+		os.system('rm -fr dist')
+		os.system('rm pyxl320/*.pyc')
+		os.system('rm pyxl320/__pycache__/*.pyc')
+		print('Run Nose tests')
+		print('Python2 tests')
+		ret = os.system("python2 -m nose -v -w tests test.py")
+		if ret > 0:
+			print('<<< Python2 nose tests failed >>>')
+			return
+		print('Python3 tests')
+		ret = os.system("python3 -m nose -v -w tests test.py")
+		if ret > 0:
+			print('<<< Python3 nose tests failed >>>')
+			return
+
+		print('Building packages ...')
+		os.system("python setup.py sdist")
 		os.system("python2 setup.py bdist_wheel")
 		os.system("python3 setup.py bdist_wheel")
+
+
+class PublishCommand(TestCommand):
+	"""Publish to Pypi"""
+	def run_tests(self):
+		print('Publishing to PyPi ...')
 		os.system("twine upload dist/pyxl320-{}*".format(VERSION))
 
 
@@ -53,7 +75,8 @@ setup(
 	packages=['pyxl320'],
 	install_requires=['pyserial', 'simplejson'],
 	cmdclass={
-		'publish': PublishCommand
+		'publish': PublishCommand,
+		'make': BuildCommand
 	},
 	scripts=[
 		'bin/set_id.py',
