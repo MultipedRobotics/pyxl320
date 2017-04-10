@@ -21,4 +21,4 @@ install:
     - pip install -U pyserial nose simplejson
 
 # command to run tests
-script: nosetests -v test/test.py
+script: python -m nose -v -w tests test.py
