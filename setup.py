@@ -40,7 +40,7 @@ setup(
 		'Topic :: Software Development :: Libraries :: Application Frameworks'
 	],
 	license='MIT',
-	keywords='dynamixel xl320 xl-320 servo actuator library robotics spider',
+	keywords=['dynamixel', 'xl320', 'xl-320', 'servo', 'actuator', 'library', 'robotics', 'robot', 'smart', 'spider'],
 	packages=[PACKAGE_NAME],
 	install_requires=['pyserial', 'simplejson', 'build_utils', 'fake_rpi'],
 	cmdclass={
