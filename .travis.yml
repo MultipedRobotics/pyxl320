@@ -18,7 +18,8 @@ python:
 # install other libraries using pip
 install:
     - pip install -U pip setuptools
-    - pip install -U pyserial nose simplejson build_utils fake_rpi
+    - pip install -U pyserial nose simplejson
+    - pip install build_utils fake_rpi
     - pip install .
 
 # command to run tests
