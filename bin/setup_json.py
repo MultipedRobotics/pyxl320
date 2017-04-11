@@ -12,8 +12,8 @@
 # servos connected. If only one, then it can.
 
 from __future__ import print_function, division
-from pyxl320 import DummySerial
-# from pyxl320 import ServoSerial
+# from pyxl320 import DummySerial
+from pyxl320 import ServoSerial
 # from pyxl320 import Packet, xl320
 from pyxl320 import Packet
 # from pyxl320.Packet import le
@@ -51,8 +51,11 @@ def main():
 	data = JsonFile.read(filename)
 	print(data)
 
-	# ser = ServoSerial(port)
-	ser = DummySerial(port)
+	if port == 'dummy':
+		ser = ServoSerial(port=port, fake=True)
+	else:
+		ser = ServoSerial(port=port)
+	
 	ser.open()
 
 	for servo in data:

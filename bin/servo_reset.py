@@ -14,7 +14,7 @@ from __future__ import print_function, division
 from pyxl320 import ServoSerial
 from pyxl320 import Packet
 from pyxl320 import xl320
-from pyxl320 import DummySerial
+# from pyxl320 import DummySerial
 from pyxl320 import utils
 from time import sleep
 import argparse
@@ -77,9 +77,9 @@ if __name__ == '__main__':
 		exit()
 
 	if port.lower() == 'dummy':
-		ser = DummySerial(port)
+		ser = ServoSerial(port=port, fake=True)
 	else:
-		ser = ServoSerial(port)
+		ser = ServoSerial(port=port)
 	ser.open()
 
 	pkt = Packet.makeResetPacket(ID, level)

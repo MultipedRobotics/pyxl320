@@ -61,8 +61,10 @@ def main():
 		curr_id = args['current_id']
 		new_id = args['new_id']
 
-	ser = ServoSerial(port)
-	# ser = DummySerial(port)
+	if port == 'dummy':
+		ser = ServoSerial(port=port, fake=True)
+	else:
+		ser = ServoSerial(port=port)
 	ser.open()
 
 	pkt = makeServoIDPacket(curr_id, new_id)

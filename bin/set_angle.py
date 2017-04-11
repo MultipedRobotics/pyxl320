@@ -7,7 +7,7 @@
 ##############################################
 
 from pyxl320 import Packet
-from pyxl320 import DummySerial
+# from pyxl320 import DummySerial
 from pyxl320 import ServoSerial
 import argparse
 
@@ -32,9 +32,9 @@ def main():
 	print('Setting servo[{}] to {:.2f} on port {}'.format(ID, angle, port))
 
 	if port.lower() == 'dummy':
-		serial = DummySerial(port)
+		serial = ServoSerial(port=port, fake=True)
 	else:
-		serial = ServoSerial(port)
+		serial = ServoSerial(port=port)
 	serial.open()
 
 	pkt = Packet.makeServoPacket(ID, angle)  # move servo 1 to 158.6 degrees

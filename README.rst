@@ -1,10 +1,11 @@
-pyXL320
-=========
-
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/complex.gif
     :align: center
+	:width: 300px
     :target: https://github.com/walchko/pyxl320
     :alt: animated gif
+
+pyXL320
+=========
 
 
 .. image:: https://landscape.io/github/walchko/pyxl320/master/landscape.svg?style=flat
@@ -25,7 +26,6 @@ version 2.0 of their protocol. The library is divided up as follows:
 
  - pyxl320
  	- **ServoSerial** - half duplex hardware serial interface
-	- **DummySerial** - for testing, doesn't talk to any hardware
 	- **Packet** - creates packets to talk to the servo
 	- **utils** - misc
 	- **xl320** - register/command/error definitions for Dynamixel's XL-320 servo
@@ -64,6 +64,7 @@ Command              Description
 ``servo_reboot.py``  reboots one or all servos
 ``servo_reset.py``   resets one or all servos to a specified level
 ``set_angle.py``     sets the angle of a given servo
+``set_baud_rate.py`` change the baud rate of the servos
 ``set_id.py``        changes the ID number for a given servo
 ==================== ==============================================================
 
@@ -80,6 +81,7 @@ and turn the LED to green using a USB serial converter:
 	from pyxl320 import ServoSerial, Packet, utils
 
 	serial = ServoSerial('/dev/tty.usbserial')  # tell it what port you want to use
+	# serial = ServoSerial('/dev/tty.usbserial', fake=True)  # use a dummy serial interface for testing
 	serial.open()
 
 	pkt = Packet.makeServoPacket(1, 158.6)  # move servo 1 to 158.6 degrees
@@ -108,8 +110,9 @@ Change Log
 -------------
 
 ========== ======= =============================
-2017-03-26 0.8.0   major overhaul of interface and removed the GPIO stuff since it isn't needed
-2017-03-19 0.7.7   can switch between GPIO pin and pyserial.setRTS() and sync write
+2017-04-01 0.9.0   added python3 support
+2017-03-26 0.8.0   major overhaul and removed the GPIO stuff
+2017-03-19 0.7.7   can switch between GPIO pin and pyserial.setRTS()
 2017-02-20 0.7.6   small fixes and added servo_reboot
 2017-01-16 0.7.5   fixes some small errors
 2016-11-29 0.7.4   add bulk write and small changes

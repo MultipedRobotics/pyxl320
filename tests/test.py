@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 ##############################################
 # The MIT License (MIT)
 # Copyright (c) 2016 Kevin Walchko
@@ -7,9 +5,11 @@
 ##############################################
 # Tests for continous integration
 
+from __future__ import print_function
 from pyxl320.Packet import le, crc16, findPkt, getPacketType
 from pyxl320 import Packet
 from pyxl320 import xl320
+from pyxl320 import ServoSerial
 
 # http://forums.trossenrobotics.com/showthread.php?7489-Hard-Can-anyone-give-me-a-sample-packet-by-running-function-quot-Reading-Current-Position-quot-for-Dynamixel-Pro-Motors
 # [0xFF, 0xFF, 0xFD, 0x00, ID, LEN_L, LEN_H, INST, PARAM 1, PARAM 2, ..., PARAM N, CRC_L, CRC_H]
@@ -98,5 +98,10 @@ def test_led_packet():
 	packet_check(ans, pkt)
 
 
-if __name__ == "__main__":
-	print('hello cowboy')
+def test_serial():
+	s = ServoSerial(port='test', fake=True)
+	s.open()
+	pkt = Packet.makePingPacket(xl320.XL320_BROADCAST_ADDR)
+	s.write(pkt)
+	s.close()
+	assert True

@@ -11,7 +11,66 @@ from __future__ import division
 from __future__ import print_function
 import serial as PySerial
 from . import Packet
+from fake_rpi import serial as FakeSerial
 import time
+
+
+# class FakeSerial(object):
+#
+# 	class Serial(object):
+# 		"""
+# 		A dummy interface to test with when not hooked up to real hardware.
+# 		"""
+# 		cd = False
+# 		cts = True
+# 		dsr = False
+# 		in_waiting = True
+# 		out_waiting = False
+# 		ri = False
+# 		port = 'port'
+# 		baudrate = 0
+# 		timeout = 0
+# 		status = False  # open or closed
+# 		name = 'name'
+#
+# 		def __init__(self):
+# 			pass
+#
+# 		def open(self):
+# 			self.status = True
+#
+# 		def isOpen(self):
+# 			return self.status
+#
+# 		def setRTS(self, a):
+# 			pass
+#
+# 		def read(self, size=1):
+# 			pass
+#
+# 		def write(self, data):
+# 			return len(data)
+#
+# 		def close(self):
+# 			self.status = False
+#
+# 		def flush(self):
+# 			pass
+#
+# 		def set_output_flow_control(self, enable=True):
+# 			pass
+#
+# 		def set_input_flow_control(self, enable=True):
+# 			pass
+#
+# 		def cancel_read(self):
+# 			pass
+#
+# 		def cancel_write(self):
+# 			pass
+#
+# 		def get_settings(self):
+# 			return {'port': self.port}
 
 
 class ServoSerial(object):
@@ -40,7 +99,7 @@ class ServoSerial(object):
 	SLEEP_TIME = 0.00005    # sleep time between read/write
 	# SLEEP_TIME = 0.000005    # sleep time between read/write
 
-	def __init__(self, port, baud_rate=1000000):
+	def __init__(self, port, baud_rate=1000000, fake=False):
 		"""
 		Constructor: sets up the serial port
 
@@ -48,7 +107,10 @@ class ServoSerial(object):
 		want to use the RPi seiral port, then you need to use a pin to toggle TX/Rx.
 		Set rst_hw to any valid BCM pin greater than 0.
 		"""
-		self.serial = PySerial.Serial()
+		if fake:
+			self.serial = FakeSerial.Serial()
+		else:
+			self.serial = PySerial.Serial()
 		self.serial.baudrate = baud_rate
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
@@ -154,7 +216,6 @@ class ServoSerial(object):
 		for cnt in range(retry):
 			self.write(pkt)  # send packet to servo
 			ans = self.read()  # get return status packet
-			# print('sendPkt ans', ans)
 
 			if ans:
 				# check for error and resend

@@ -7,9 +7,9 @@
 ##############################################
 
 from __future__ import print_function, division
-# from pyxl320 import ServoSerial
+from pyxl320 import ServoSerial
 from pyxl320 import Packet
-from pyxl320 import DummySerial
+# from pyxl320 import DummySerial
 import argparse
 
 rates = {
@@ -42,8 +42,10 @@ def main():
 	# 0: 9600, 1:57600, 2:115200, 3:1Mbps
 	new_rate = rates[args['new_rate']]
 
-	# ser = ServoSerial(port, curr_rate)
-	ser = DummySerial(port, curr_rate)
+	if port == 'dummy':
+		ser = ServoSerial(port=port, baud_rate=curr_rate, fake=True)
+	else:
+		ser = ServoSerial(port=port, baud_rate=curr_rate)
 	ser.open()
 
 	pkt = Packet.makeBaudRatePacket(ID, new_rate)

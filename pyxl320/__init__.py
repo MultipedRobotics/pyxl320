@@ -1,13 +1,13 @@
 
 
-__version__ = '0.9.0'
+__version__ = '0.9.1'
 __copyright__ = 'Copyright (c) 2016 Kevin Walchko'
 __license__ = 'MIT'
 __author__ = 'Kevin J. Walchko'
 
 
 from .ServoSerial import ServoSerial
-from .DummySerial import DummySerial
+# from .DummySerial import DummySerial
 from . import utils
 # from utils import listSerialPorts
 from . import xl320
