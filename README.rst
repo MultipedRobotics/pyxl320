@@ -1,6 +1,6 @@
 .. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/complex.gif
     :align: center
-	:width: 300px
+    :width: 300px
     :target: https://github.com/walchko/pyxl320
     :alt: animated gif
 
