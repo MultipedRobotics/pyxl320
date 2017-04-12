@@ -98,10 +98,10 @@ def test_led_packet():
 	packet_check(ans, pkt)
 
 
-# def test_serial():
-# 	s = ServoSerial(port='test', fake=True)
-# 	s.open()
-# 	pkt = Packet.makePingPacket(xl320.XL320_BROADCAST_ADDR)
-# 	s.write(pkt)
-# 	s.close()
-# 	assert True
+def test_serial():
+	s = ServoSerial(port='test', fake=True)
+	s.open()
+	pkt = Packet.makePingPacket(xl320.XL320_BROADCAST_ADDR)
+	s.write(pkt)
+	s.close()
+	assert True
