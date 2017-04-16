@@ -105,6 +105,10 @@ your own using the basic ``makeWritePacket`` and ``makeReadPacket``.
 	params = le(int(220.1/300*1023))  # convert 220.1 degrees to an int between 0-1023
 	pkt = Packet.makeWritePacket(ID, reg, params)
 
+Robot Examples
+------------------
+
+Here are some example `robots <https://github.com/walchko/pyxl320/tree/master/docs/robots/robots.md>`_
 
 Change Log
 -------------

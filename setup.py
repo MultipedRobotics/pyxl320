@@ -6,7 +6,7 @@
 
 from __future__ import print_function
 from setuptools import setup
-from pyxl320 import __version__ as VERSION
+from pyxl320.version import __version__ as VERSION
 from build_utils import BuildCommand
 from build_utils import PublishCommand
 from build_utils import BinaryDistribution
@@ -40,7 +40,7 @@ setup(
 	license='MIT',
 	keywords=['dynamixel', 'xl320', 'xl-320', 'servo', 'actuator', 'library', 'robotics', 'robot', 'smart', 'spider'],
 	packages=[PACKAGE_NAME],
-	install_requires=['pyserial', 'simplejson', 'build_utils', 'fake_rpi'],
+	install_requires=open('requirements.txt').readlines(),
 	cmdclass={
 		'publish': PublishCommand,
 		'make': BuildCommand
