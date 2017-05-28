@@ -20,7 +20,7 @@ PublishCommand.version = VERSION
 
 setup(
 	author='Kevin Walchko',
-	author_email='kevin.walchko@outlook.com',
+	author_email='walchko@users.noreply.github.com',
 	name=PACKAGE_NAME,
 	version=VERSION,
 	description='A library to control dynamixel XL-320 servos with python',
