@@ -8,9 +8,6 @@ pyXL320
 =========
 
 
-.. image:: https://landscape.io/github/MomsFriendlyRobotCompany/pyxl320/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/MomsFriendlyRobotCompany/pyxl320/master
-   :alt: Code Health
 .. image:: https://img.shields.io/pypi/v/pyxl320.svg
     :target: https://pypi.python.org/pypi/pyxl320/
     :alt: Latest Version
