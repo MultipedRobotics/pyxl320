@@ -25,7 +25,7 @@ def handleArgs():
 	# parser.add_argument('-n', '--newid', help='set new id', type=int, default=1)
 	parser.add_argument('-c', '--current_rate', help='current baud rate, default is 1000000', type=int, default=1000000)
 	parser.add_argument('-i', '--id', help='current id', type=int, default=1)
-	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/tty.usbserial-A5004Flb')
+	parser.add_argument('port', help='serial port', type=str)
 	parser.add_argument('-r', '--new_rate', help='set new baud rate to 9600, 57600, 115200, or 1000000; default is 1000000', type=int, default=1000000)
 
 	args = vars(parser.parse_args())

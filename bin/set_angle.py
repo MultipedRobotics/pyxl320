@@ -15,8 +15,8 @@ import argparse
 def handleArgs():
 	parser = argparse.ArgumentParser(description='Sets a servo to an angle')
 	parser.add_argument('-i', '--id', help='servo id', type=int, default=1)
+	parser.add_argument('port', help='serial port  or \'dummy\' for testing', type=str)
 	parser.add_argument('angle', help='servo angle in degrees: 0.0 - 300.0', type=float)
-	parser.add_argument('-p', '--port', help='serial port  or \'dummy\' for testing, default is \'/dev/serial0\'', type=str, default='/dev/serial0')
 
 	args = vars(parser.parse_args())
 	return args
@@ -38,9 +38,9 @@ def main():
 	serial.open()
 
 	pkt = Packet.makeServoPacket(ID, angle)  # move servo 1 to 158.6 degrees
-	err_no, err_str = serial.sendPkt(pkt)  # send packet to servo
-	if err_no:
-		print('Oops ... something went wrong!: {}'.format(err_str))
+	ans = serial.sendPkt(pkt)  # send packet to servo
+	if ans:
+		print('status: {}'.format(ans))
 
 
 if __name__ == '__main__':

@@ -15,6 +15,8 @@ from pyxl320 import utils
 import argparse
 import time
 from pyxl320 import xl320
+from serial import SerialException
+import sys
 
 
 def sweep(port, rate, ID, retry=3):
@@ -32,7 +34,15 @@ def sweep(port, rate, ID, retry=3):
 	if ID < 0:
 		ID = xl320.XL320_BROADCAST_ADDR
 
-	s.open()
+	try:
+		s.open()
+	except SerialException as e:
+		# print('Error opening serial port:')
+		print('-'*40)
+		print(sys.argv[0], ':')
+		print(e)
+		exit(1)
+
 	pkt = makePingPacket(ID)
 	print('ping', pkt)
 	s.write(pkt)
@@ -59,7 +69,7 @@ def handleArgs():
 	# parser.add_argument('-m', '--max', help='max id', type=int, default=253)
 	parser.add_argument('-r', '--rate', help='servo baud rate', type=int, default=1000000)
 	parser.add_argument('-i', '--id', help='ping servo ID', type=int, default=-1)
-	parser.add_argument('-p', '--port', help='serial port name, set to "dummy" for testing', type=str, default='/dev/serial0')
+	parser.add_argument('port', help='serial port name, set to "dummy" for testing', type=str)
 
 	args = vars(parser.parse_args())
 	return args

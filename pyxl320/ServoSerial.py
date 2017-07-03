@@ -97,7 +97,6 @@ class ServoSerial(object):
 	# SLEEP_TIME = 0.005    # sleep time between read/write
 	# SLEEP_TIME = 0.0005    # sleep time between read/write
 	SLEEP_TIME = 0.00005    # sleep time between read/write
-	# SLEEP_TIME = 0.000005    # sleep time between read/write
 
 	def __init__(self, port, baud_rate=1000000, fake=False):
 		"""
@@ -115,7 +114,6 @@ class ServoSerial(object):
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
 		self.serial.timeout = 0.0001  # time out waiting for blocking read()
-		# self.serial.timeout = 0.0001
 
 	def __del__(self):
 		"""
@@ -125,12 +123,17 @@ class ServoSerial(object):
 
 	def setRTS(self, level):
 		time.sleep(self.SLEEP_TIME)
-		self.serial.setRTS(not level)
+		# only need one of thse, but the lazy option to if statements to determin
+		# if using DTR or RTS as the direction pin
+		self.serial.dtr = level
+		self.serial.rts = level
 
 	def open(self):
 		if self.serial.isOpen():
 			raise Exception('SeroSerial::open() ... Oops, port is already open')
+
 		self.serial.open()
+
 		self.setRTS(self.DD_WRITE)
 		if self.serial.isOpen():
 			print('Opened {} @ {}'.format(self.serial.name, self.serial.baudrate))
@@ -225,7 +228,7 @@ class ServoSerial(object):
 				print('>> retry {} <<'.format(cnt))
 				time.sleep(sleep_time)
 
-		return []
+		return None
 
 	def close(self):
 		"""

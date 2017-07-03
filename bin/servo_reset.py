@@ -32,11 +32,12 @@ def get_input(s):
 
 def handleArgs():
 	parser = argparse.ArgumentParser(description='Resets servo(s) to factory defaults')
+	parser.add_argument('port', help='serial port or \'dummy\' for testing', type=str)
 	parser.add_argument('-a', '--all', help='reset all servos to defaults', action='store_true')
 	parser.add_argument('-i', '--id', help='servo id', type=int, default=1)
 	parser.add_argument('-l', '--level', help='reset level: 0-reset all, 1-reset all but ID, 2-reset all but ID and baud rate', type=int, default=2)
 	# parser.add_argument('-c', '--current_id', help='current id', type=int, default=1)
-	parser.add_argument('-p', '--port', help='serial port or \'dummy\' for testing, default is \'/dev/serial0\'', type=str, default='/dev/serial0')
+	# parser.add_argument('port', help='serial port or \'dummy\' for testing', type=str)
 	parser.add_argument('-y', '--yes', help='answer "yes" to prompt and force reset', action='store_true')
 
 	args = vars(parser.parse_args())

@@ -45,7 +45,7 @@ def handleArgs():
 	parser.add_argument('-i', '--interactive', help='input via commandline', action='store_true')
 	parser.add_argument('-n', '--new_id', help='set new id', type=int, default=1)
 	parser.add_argument('-c', '--current_id', help='current id', type=int, default=1)
-	parser.add_argument('-p', '--port', help='serial port', type=str, default='/dev/tty.usbserial-A5004Flb')
+	parser.add_argument('port', help='serial port', type=str)
 
 	args = vars(parser.parse_args())
 	return args

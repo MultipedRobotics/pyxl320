@@ -21,7 +21,7 @@ def handleArgs():
 	parser = argparse.ArgumentParser(description='Resets servo(s) to factory defaults')
 	parser.add_argument('-a', '--all', help='reset all servos to defaults', action='store_true')
 	parser.add_argument('-i', '--id', help='servo id', type=int, default=1)
-	parser.add_argument('-p', '--port', help='serial port or \'dummy\' for testing, default is \'/dev/serial0\'', type=str, default='/dev/serial0')
+	parser.add_argument('port', help='serial port or \'dummy\' for testing', type=str)
 
 	args = vars(parser.parse_args())
 	return args

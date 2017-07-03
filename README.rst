@@ -1,4 +1,4 @@
-.. image:: https://raw.githubusercontent.com/walchko/pyxl320/master/pics/complex.gif
+.. image:: https://raw.githubusercontent.com/MomsFriendlyRobotCompany/pyxl320/master/pics/complex.gif
     :align: center
     :width: 300px
     :target: https://github.com/walchko/pyxl320
@@ -8,8 +8,8 @@ pyXL320
 =========
 
 
-.. image:: https://landscape.io/github/walchko/pyxl320/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/walchko/pyxl320/master
+.. image:: https://landscape.io/github/MomsFriendlyRobotCompany/pyxl320/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/MomsFriendlyRobotCompany/pyxl320/master
    :alt: Code Health
 .. image:: https://img.shields.io/pypi/v/pyxl320.svg
     :target: https://pypi.python.org/pypi/pyxl320/
@@ -17,8 +17,8 @@ pyXL320
 .. image:: https://img.shields.io/pypi/l/pyxl320.svg
     :target: https://pypi.python.org/pypi/pyxl320/
     :alt: License
-.. image:: https://travis-ci.org/walchko/pyxl320.svg?branch=master
-    :target: https://travis-ci.org/walchko/pyxl320
+.. image:: https://travis-ci.org/MomsFriendlyRobotCompany/pyxl320.svg?branch=master
+    :target: https://travis-ci.org/MomsFriendlyRobotCompany/pyxl320
 
 
 This is still a work in progress and **only** supports XL-320 and **only**
