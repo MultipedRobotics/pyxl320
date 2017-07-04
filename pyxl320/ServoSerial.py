@@ -11,7 +11,7 @@ from __future__ import division
 from __future__ import print_function
 import serial as PySerial
 from . import Packet
-from fake_rpi import serial as FakeSerial
+# from fake_rpi import serial as FakeSerial
 import time
 
 
@@ -107,13 +107,15 @@ class ServoSerial(object):
 		Set rst_hw to any valid BCM pin greater than 0.
 		"""
 		if fake:
-			self.serial = FakeSerial.Serial()
+			# self.serial = FakeSerial.Serial()
+			pass
 		else:
 			self.serial = PySerial.Serial()
 		self.serial.baudrate = baud_rate
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
-		self.serial.timeout = 0.0001  # time out waiting for blocking read()
+		# self.serial.timeout = 0.0001  # time out waiting for blocking read()
+		self.serial.timeout = 0.005
 
 	def __del__(self):
 		"""
@@ -127,6 +129,7 @@ class ServoSerial(object):
 		# if using DTR or RTS as the direction pin
 		self.serial.dtr = level
 		self.serial.rts = level
+		# time.sleep(self.SLEEP_TIME)
 
 	def open(self):
 		if self.serial.isOpen():
@@ -162,13 +165,69 @@ class ServoSerial(object):
 		# return ret
 		ret = []
 		self.setRTS(self.DD_READ)
+
+		# this in_waiting is wrong ... i can read more than is there
+		# if self.serial.in_waiting < 12:
+		# 	time.sleep(0.001)
+		# 	print('waiting:', self.serial.in_waiting)
+		# else:
+		# 	print('waiting:', self.serial.in_waiting)
+
 		data = self.serial.read(how_much)
-		# print('readPkts data', data)
+		# print('read() data', data, 'len(data)', len(data))
 		if data:
 			data = self.decode(data)
 			# print('decode', data)
 			ret = Packet.findPkt(data)
 			# print('ret', ret)
+		return ret
+
+	def read2(self, how_much=128):  # FIXME: 128 might be too much ... what is largest?
+		"""
+		This toggles the RTS pin and reads in data. It also converts the buffer
+		back into a list of bytes and searches through the list to find valid
+		packets of info. If there is more than one packet, this returns an
+		array of valid packets.
+		"""
+		ret = []
+		self.setRTS(self.DD_READ)
+
+		header = [0xFF, 0xFD, 0x00]
+		ptr = 0
+		while True:
+			b = self.serial.read(1)
+			if not b:
+				return None
+			b = ord(b)
+			print('b', b)
+			if b == header[ptr]:
+				ptr += 1
+				ret.append(b)
+				if ptr == 3:  # found header
+					print('found header')
+					d = self.serial.read(1)  # ID
+					ret.append(ord(d))
+					l, h = self.serial.read(2)  # length
+					l = ord(l)
+					h = ord(h)
+					ret.append(l)
+					ret.append(h)
+					length = (h << 8) + l
+					print('length', length)
+					how_many = length
+					while how_many > 0:
+						print('how_many', how_many)
+						d = self.serial.read(how_many)
+						d = self.decode(d)
+						print('read:', len(d))
+						how_many -= len(d)
+						for i in d:
+							ret.append(i)
+					print('bye')
+					return [ret]
+			else:
+				ret = []
+				ptr = 0
 		return ret
 
 	# def readPkts(self, how_much=128):  # FIXME: 128 might be too much ... what is largest?
@@ -197,11 +256,13 @@ class ServoSerial(object):
 		all of the data into bytes before it writes.
 		"""
 		self.setRTS(self.DD_WRITE)
+		self.flushInput()
 		# prep data array for transmition
 		pkt = bytearray(pkt)
 		pkt = bytes(pkt)
 
 		num = self.serial.write(pkt)
+		# self.serial.flush()
 		# print('wrote {} of len(pkt) = {}'.format(num, len(pkt)))
 		return num
 
@@ -217,6 +278,7 @@ class ServoSerial(object):
 			array of packets
 		"""
 		for cnt in range(retry):
+			self.serial.flushInput()
 			self.write(pkt)  # send packet to servo
 			ans = self.read()  # get return status packet
 
@@ -225,7 +287,7 @@ class ServoSerial(object):
 				return ans
 
 			else:
-				print('>> retry {} <<'.format(cnt))
+				# print('>> retry {} <<'.format(cnt))
 				time.sleep(sleep_time)
 
 		return None

@@ -449,6 +449,9 @@ def findPkt(pkt):
 		crc_pos = 5 + length
 		pkt_crc = pkt[crc_pos:crc_pos + 2]
 		crc = le(crc16(pkt[:crc_pos]))
+		# if len(pkt) < (crc_pos + 1):
+		# 	print('<<< need more data for findPkt >>>')
+
 		# print(' > calc crc', crc)
 		# print(' > pkt crc', pkt_crc)
 		if pkt_crc == crc:
