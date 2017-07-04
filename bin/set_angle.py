@@ -12,8 +12,17 @@ from pyxl320 import ServoSerial
 import argparse
 
 
+DESCRIPTION = """
+Set the angle of a servo in degrees.
+
+Example: set servo 3 to angle 45
+
+./set_angle /dev/serial0 45 -i 3
+"""
+
+
 def handleArgs():
-	parser = argparse.ArgumentParser(description='Sets a servo to an angle')
+	parser = argparse.ArgumentParser(description=DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter)
 	parser.add_argument('-i', '--id', help='servo id', type=int, default=1)
 	parser.add_argument('port', help='serial port  or \'dummy\' for testing', type=str)
 	parser.add_argument('angle', help='servo angle in degrees: 0.0 - 300.0', type=float)

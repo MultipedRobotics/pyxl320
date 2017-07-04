@@ -128,10 +128,12 @@ def makePacket(ID, instr, reg=None, params=None):
 	pkt += [ID]
 	pkt += [0x00, 0x00]  # length placeholder
 	pkt += [instr]  # instruction
-	if reg: pkt += le(reg)  # not everything has a register
-	if params: pkt += params    # not everything has parameters
+	if reg:
+		pkt += le(reg)  # not everything has a register
+	if params:
+		pkt += params    # not everything has parameters
 
-	length = le(len(pkt)-5)  # length = len(packet) - (header(3), reserve(1), id(1))
+	length = le(len(pkt) - 5)  # length = len(packet) - (header(3), reserve(1), id(1))
 	pkt[5] = length[0]  # L
 	pkt[6] = length[1]  # H
 

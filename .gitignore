@@ -11,3 +11,4 @@ build
 c/
 nogit
 __pychache__
+bin/*.json

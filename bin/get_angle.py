@@ -2,57 +2,79 @@
 
 ##############################################
 # The MIT License (MIT)
-# Copyright (c) 2016 Kevin Walchko
+# Copyright (c) 2017 Kevin Walchko
 # see LICENSE for full details
 ##############################################
 
 from __future__ import print_function, division
-# from pyxl320 import Packet
-from pyxl320 import xl320
 from pyxl320 import ServoSerial
-from pyxl320.Packet import makeReadPacket, le, makePacket
+from pyxl320.Packet import le, makeReadPacket
 import argparse
-import time
-from pprint import pprint
+import simplejson as json
+# from pyxl320.xl320 import ErrorStatusMsg
 
 
-def makeSyncReadPacket(reg, length, ids):
-	"""
-	Write sync angle information to servos.
+# def makeSyncReadPacket(reg, length, ids):
+# 	"""
+# 	Write sync angle information to servos.
+#
+# 	info = [[ID, angle], [ID, angle], ...]
+# 	"""
+# 	# length = le(length)
+# 	data = []
+#
+# 	d = le(reg)
+# 	data.append(d[0])
+# 	data.append(d[1])
+# 	d = le(length)
+# 	data.append(d[0])
+# 	data.append(d[1])
+# 	data += ids
+#
+# 	ID = xl320.XL320_BROADCAST_ADDR
+# 	instr = xl320.XL320_SYNC_READ
+# 	pkt = makePacket(ID, instr, None, data)  # create packet
+#
+# 	# print(pkt)
+#
+# 	return pkt
 
-	info = [[ID, angle], [ID, angle], ...]
-	"""
-	# length = le(length)
-	data = []
 
-	d = le(reg)
-	data.append(d[0])
-	data.append(d[1])
-	d = le(length)
-	data.append(d[0])
-	data.append(d[1])
-	data += ids
+def writeToFile(data, filename='data.json'):
+	with open(filename, 'w') as outfile:
+		json.dump(data, outfile)
 
-	ID = xl320.XL320_BROADCAST_ADDR
-	instr = xl320.XL320_SYNC_READ
-	pkt = makePacket(ID, instr, None, data)  # create packet
 
-	# print(pkt)
+DESCRIPTION = """
+Returns the angles of servos between <start> and <end>. The servo search range
+has to be continous. You can not select servos 1, 3, 6, 7; you have to select
+1 - 7.
 
-	return pkt
+example: get_angle.py /dev/serial0 1 7
+
+Servos: 1 - 7
+   # | Angle
+----------------------------------------
+   1 | 143.70
+   2 | 281.23
+   3 |  97.07
+   4 | 147.51
+   5 | 280.06
+   6 | 105.87
+   7 | 154.84
+"""
 
 
 def handleArgs():
-	parser = argparse.ArgumentParser(description='Returns the angles of servos between start and end')
-	# parser.add_argument('-i', '--id', help='servo id', type=int, default=-1)
+	parser = argparse.ArgumentParser(description=DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter)
 	parser.add_argument('port', help='serial port  or \'dummy\' for testing', type=str)
 	parser.add_argument('start', help='starting servo number', type=int)
 	parser.add_argument('end', help='ending servo number', type=int)
-
-	# parser.add_argument('angle', help='servo angle in degrees: 0.0 - 300.0', type=float)
+	parser.add_argument('-j', '--json', help='save info to a json file, you must supply a file name: --json my_file.json', type=str)
 
 	args = vars(parser.parse_args())
 	return args
+
 
 def getInfo(pkt):
 	ID = pkt[4]
@@ -74,18 +96,10 @@ def getSingle(ID, ser):
 
 	return ID, angle
 
+
 def main():
 	args = handleArgs()
-
-	# if int(args['id']) < 0:
-	# 	ID = xl320.XL320_BROADCAST_ADDR
-	# else:
-	# 	ID = int(args['id'])
-
-	port = args['port']  # '/dev/tty.usbserial-A5004Flb'
-	# angle = args['angle']
-
-	# print('Getting servo(s) info on port {}'.format(port))
+	port = args['port']
 
 	if port.lower() == 'dummy':
 		s = ServoSerial(port=port, fake=True)
@@ -105,21 +119,31 @@ def main():
 		resp[i] = angle
 
 	for _ in range(3):
+		cnt = 0
 		for k, v in resp.items():
+			# search through and find servos w/o responses (i.e., None)
 			if v is None:
+				cnt += 1  # found a None
 				ID, angle = getSingle(k, s)
-				# if ID != k:
-				# 	print('crap', ID, '!=', k)
 				resp[k] = angle
+
+		if cnt == 0:  # we must have gotten them all on the last run
+			break
 
 	print('')
 	print('Servos: {} - {}'.format(args['start'], args['end']))
+	print('{:>4} | {:6}'.format('#', 'Angle'))
 	print('-' * 40)
 	for k, v in resp.items():
 		if v is None:
 			print('{:4} | {}'.format(k, 'unknown'))
 		else:
-			print('{:4} | {:.2f}'.format(k, v))
+			print('{:4} | {:6.2f}'.format(k, v))
+	print('')
+
+	if args['json']:
+		print('Saving servo angle info to {}'.format(args['json']))
+		writeToFile(resp, args['json'])
 
 	s.close()
 

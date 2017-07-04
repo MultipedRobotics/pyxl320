@@ -8,15 +8,38 @@
 # Send ping commands to all servos
 
 from __future__ import print_function
-from pyxl320.Packet import makePingPacket, packetToDict
+from pyxl320.Packet import makePingPacket
 from pyxl320 import ServoSerial
 # from pyxl320 import DummySerial
 from pyxl320 import utils
 import argparse
 import time
 from pyxl320 import xl320
+from pyxl320.xl320 import ErrorStatusMsg
 from serial import SerialException
 import sys
+
+
+def packetToDict(pkt):
+	"""
+	Given a packet, this turns it into a dictionary ... is this useful?
+
+	in: packet, array of numbers
+	out: dictionary (key, value)
+	"""
+
+	d = {
+		'id': pkt[4],
+		# 'instruction': xl320.InstrToStr[pkt[7]],
+		# 'length': (pkt[6] << 8) + pkt[5],
+		# 'params': pkt[8:-2],
+		'Model Number': (pkt[10] << 8) + pkt[9],
+		'Firmware Ver': pkt[11],
+		'Error': ErrorStatusMsg[pkt[8]],
+		# 'crc': pkt[-2:]
+	}
+
+	return d
 
 
 def sweep(port, rate, ID, retry=3):
@@ -44,7 +67,7 @@ def sweep(port, rate, ID, retry=3):
 		exit(1)
 
 	pkt = makePingPacket(ID)
-	print('ping', pkt)
+	# print('ping', pkt)
 	s.write(pkt)
 
 	# as more servos add up, I might need to increase the cnt number???
@@ -64,8 +87,32 @@ def sweep(port, rate, ID, retry=3):
 	s.close()
 
 
+DESCRIPTION = """
+Sends out a ping packet and prints all of the returned packets. If you don't
+specify a specific id number, the program defaults to 'all'.
+
+Example:
+
+./servo_ping.py /dev/tty.usbserial-AL034G2K
+Finding all servos:
+Opened /dev/tty.usbserial-AL034G2K @ 1000000
+---------------------------------------
+id........................... 1
+Firmware Ver................. 29
+Model Number................. 350
+Error........................ None
+raw pkt: [255, 255, 253, 0, 1, 7, 0, 85, 0, 94, 1, 29, 31, 71]
+---------------------------------------
+id........................... 2
+Firmware Ver................. 29
+Model Number................. 350
+Error........................ None
+raw pkt: [255, 255, 253, 0, 2, 7, 0, 85, 0, 94, 1, 29, 21, 119]
+"""
+
+
 def handleArgs():
-	parser = argparse.ArgumentParser(description='ping servos')
+	parser = argparse.ArgumentParser(description=DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter)
 	# parser.add_argument('-m', '--max', help='max id', type=int, default=253)
 	parser.add_argument('-r', '--rate', help='servo baud rate', type=int, default=1000000)
 	parser.add_argument('-i', '--id', help='ping servo ID', type=int, default=-1)
