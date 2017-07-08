@@ -1,3 +1,5 @@
+![](pics/my_test.jpg)
+
 # Index
 
 - [Servo Specs](servo.md)

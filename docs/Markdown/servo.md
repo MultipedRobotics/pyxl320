@@ -1,4 +1,4 @@
-![](../../pics/xl-320.jpg)
+![](pics/xl-320.jpg)
 
 - Weight : 16.7g
 - Dimension : 24mm x 36mm x 27mm
