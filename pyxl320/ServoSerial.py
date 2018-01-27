@@ -11,7 +11,7 @@ from __future__ import division
 from __future__ import print_function
 import serial as PySerial
 from . import Packet
-from fake_rpi import serial as FakeSerial
+#from fake_rpi import serial as FakeSerial
 import time
 
 
