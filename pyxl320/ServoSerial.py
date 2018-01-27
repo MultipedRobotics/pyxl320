@@ -106,10 +106,10 @@ class ServoSerial(object):
 		want to use the RPi seiral port, then you need to use a pin to toggle TX/Rx.
 		Set rst_hw to any valid BCM pin greater than 0.
 		"""
-		if fake:
-			self.serial = FakeSerial.Serial()
-		else:
-			self.serial = PySerial.Serial()
+		# if fake:
+		# 	self.serial = FakeSerial.Serial()
+		# else:
+		self.serial = PySerial.Serial()
 		self.serial.baudrate = baud_rate
 		self.serial.port = port
 		# the default time delay on the servo is 0.5 msec before it returns a status pkt
