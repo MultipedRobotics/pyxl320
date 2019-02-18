@@ -78,9 +78,10 @@ def run(ID, serial, maxs, mins, delta):
 # modify these for your system
 ID = xl320.XL320_BROADCAST_ADDR  # I seem to get better performance on braodcast
 # port = '/dev/tty.usbserial-A5004Flb'
-port = '/dev/tty.usbserial-A700h2xE'
+# port = '/dev/tty.usbserial-A700h2xE'
 # port = '/dev/tty.usbserial-A5004Fnd'
 # port = '/dev/tty.usbserial-A5004Flb'
+port = '/dev/tty.usbserial-AL034G2K'
 speed = 0.5  # 50% speed
 
 if port is 'dummy':
